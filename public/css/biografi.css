@@ -1,0 +1,274 @@
+/* ============================================
+   BIOGRAFI PAGE STYLES
+   ============================================ */
+
+/* BIOGRAFI HEADER */
+.biografi-header {
+    text-align: center;
+    margin-bottom: 3rem;
+    padding-bottom: 2rem;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.seniman-name {
+    font-size: 3rem;
+    color: var(--primary-blue);
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.5px;
+}
+
+.seniman-kategori {
+    font-size: 1.1rem;
+    color: var(--text-light);
+    font-weight: 500;
+}
+
+/* BIOGRAFI CONTAINER */
+.biografi-container {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 3rem;
+    align-items: flex-start;
+}
+
+/* LEFT COLUMN - FOTO */
+.biografi-left {
+    position: sticky;
+    top: 100px;
+}
+
+.seniman-photo {
+    width: 100%;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 8px 24px rgba(30, 136, 229, 0.15);
+    transition: all 0.4s ease;
+}
+
+.seniman-photo img {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+    aspect-ratio: 3 / 4;
+}
+
+.seniman-photo:hover {
+    box-shadow: 0 12px 32px rgba(30, 136, 229, 0.25);
+    transform: translateY(-4px);
+}
+
+/* RIGHT COLUMN - BIOGRAFI & KARYA */
+.biografi-right {
+    padding-top: 0;
+}
+
+/* SECTION TITLE */
+.section-title {
+    font-size: 1.5rem;
+    color: var(--primary-blue);
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid var(--primary-blue);
+    display: inline-block;
+}
+
+/* BIOGRAFI SECTION */
+.biografi-section {
+    margin-bottom: 3rem;
+}
+
+.biografi-text {
+    font-size: 0.95rem;
+    color: var(--text-dark);
+    line-height: 1.8;
+    margin-bottom: 1.5rem;
+    text-align: justify;
+}
+
+/* KARYA SECTION */
+.karya-section {
+    margin-top: 3rem;
+}
+
+.karya-list {
+    list-style-type: decimal;
+    list-style-position: inside;
+    padding-left: 0;
+}
+
+.karya-item {
+    background-color: var(--light-gray);
+    padding: 1.5rem;
+    margin-bottom: 1.25rem;
+    border-radius: 8px;
+    border-left: 4px solid var(--primary-blue);
+    transition: all 0.3s ease;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.karya-item:hover {
+    background-color: rgba(30, 136, 229, 0.05);
+    box-shadow: 0 4px 12px rgba(30, 136, 229, 0.1);
+    transform: translateX(4px);
+}
+
+.karya-info {
+    flex: 1;
+}
+
+.karya-title {
+    font-size: 1.05rem;
+    color: var(--primary-blue);
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.karya-title:hover {
+    color: var(--primary-blue-dark);
+    text-decoration: underline;
+}
+
+.karya-desc {
+    font-size: 0.85rem;
+    color: var(--text-light);
+    margin: 0;
+    line-height: 1.5;
+}
+
+.btn-lihat-karya {
+    padding: 0.7rem 1.5rem;
+    background-color: var(--primary-blue);
+    color: var(--white);
+    border: none;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.btn-lihat-karya:hover {
+    background-color: var(--primary-blue-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(30, 136, 229, 0.3);
+}
+
+.btn-lihat-karya:active {
+    transform: translateY(0);
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+/* Tablet */
+@media (max-width: 1024px) {
+    .biografi-container {
+        grid-template-columns: 1fr;
+        gap: 2.5rem;
+    }
+
+    .biografi-left {
+        position: relative;
+        top: auto;
+    }
+
+    .seniman-name {
+        font-size: 2.5rem;
+    }
+
+    .karya-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .btn-lihat-karya {
+        align-self: flex-start;
+    }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    .biografi-header {
+        margin-bottom: 2rem;
+        padding-bottom: 1.5rem;
+    }
+
+    .seniman-name {
+        font-size: 2rem;
+        margin-bottom: 0.25rem;
+    }
+
+    .seniman-kategori {
+        font-size: 1rem;
+    }
+
+    .biografi-container {
+        gap: 1.5rem;
+    }
+
+    .section-title {
+        font-size: 1.25rem;
+        margin-bottom: 1.25rem;
+    }
+
+    .biografi-text {
+        font-size: 0.9rem;
+        line-height: 1.7;
+        margin-bottom: 1.25rem;
+        text-align: left;
+    }
+
+    .karya-item {
+        padding: 1.25rem;
+        margin-bottom: 1rem;
+    }
+
+    .karya-title {
+        font-size: 1rem;
+    }
+
+    .karya-desc {
+        font-size: 0.8rem;
+    }
+
+    .btn-lihat-karya {
+        width: 100%;
+        padding: 0.6rem 1.25rem;
+        font-size: 0.8rem;
+    }
+}
+
+/* Small Mobile */
+@media (max-width: 576px) {
+    .seniman-name {
+        font-size: 1.5rem;
+    }
+
+    .biografi-text {
+        font-size: 0.85rem;
+        line-height: 1.6;
+    }
+
+    .karya-item {
+        padding: 1rem;
+        border-left-width: 3px;
+    }
+
+    .btn-lihat-karya {
+        padding: 0.5rem 1rem;
+        font-size: 0.75rem;
+    }
+}

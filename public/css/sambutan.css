@@ -1,0 +1,483 @@
+/* ============================================
+   SAMBUTAN PAGE STYLES
+   ============================================ */
+
+/* HERO SECTION */
+.sambutan-hero {
+    background: linear-gradient(135deg, var(--primary-blue) 0%, rgba(30, 136, 229, 0.8) 100%);
+    padding: 3rem 0;
+    margin-bottom: 3rem;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.hero-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    align-items: center;
+}
+
+.hero-text {
+    color: var(--white);
+    padding-left: 1rem;
+}
+
+.hero-title {
+    font-size: 3rem;
+    font-weight: 700;
+    margin: 0;
+    margin-bottom: 0.5rem;
+    line-height: 1.2;
+}
+
+.hero-subtitle {
+    font-size: 1.25rem;
+    font-weight: 300;
+    margin: 0;
+    opacity: 0.95;
+}
+
+.hero-image {
+    overflow: hidden;
+    border-radius: 8px;
+    max-height: 350px;
+}
+
+.hero-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* MAIN CONTENT */
+.sambutan-content {
+    width: 100%;
+}
+
+/* CONTENT SECTIONS */
+.content-section {
+    margin-bottom: 3rem;
+    background-color: var(--white);
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.section-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.header-line {
+    width: 4px;
+    height: 32px;
+    background-color: var(--primary-blue);
+    border-radius: 2px;
+}
+
+.section-title {
+    font-size: 1.75rem;
+    color: var(--primary-blue);
+    font-weight: 700;
+    margin: 0;
+}
+
+.section-body {
+    padding: 0 1rem;
+}
+
+/* TEXT STYLES */
+.greeting-text {
+    font-size: 1.2rem;
+    color: var(--primary-blue);
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.greeting-arabic {
+    font-style: italic;
+    opacity: 0.85;
+}
+
+.main-text {
+    font-size: 1rem;
+    line-height: 1.8;
+    color: var(--text-dark);
+    margin-bottom: 1.5rem;
+    text-align: justify;
+}
+
+.intro-text {
+    font-size: 1rem;
+    line-height: 1.8;
+    color: var(--text-dark);
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+/* VISI & MISI GRID */
+.visi-misi-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+}
+
+.visi-misi-card {
+    background: linear-gradient(135deg, rgba(30, 136, 229, 0.05) 0%, rgba(30, 136, 229, 0.1) 100%);
+    padding: 2rem;
+    border-radius: 8px;
+    border-left: 4px solid var(--primary-blue);
+}
+
+.card-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    height: 60px;
+    background-color: var(--primary-blue);
+    border-radius: 50%;
+    margin-bottom: 1rem;
+    color: var(--white);
+}
+
+.card-title {
+    font-size: 1.5rem;
+    color: var(--primary-blue);
+    font-weight: 700;
+    margin: 0 0 1rem 0;
+}
+
+.card-text {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: var(--text-dark);
+    margin: 0;
+}
+
+.card-list {
+    font-size: 0.95rem;
+    line-height: 1.8;
+    color: var(--text-dark);
+    margin: 0;
+    padding-left: 1.5rem;
+}
+
+.card-list li {
+    margin-bottom: 0.75rem;
+}
+
+/* OBJECTIVES GRID */
+.objectives-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+}
+
+.objective-item {
+    background: linear-gradient(135deg, rgba(30, 136, 229, 0.05) 0%, rgba(30, 136, 229, 0.1) 100%);
+    padding: 2rem;
+    border-radius: 8px;
+    border-top: 4px solid var(--primary-blue);
+    transition: all 0.3s ease;
+}
+
+.objective-item:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 16px rgba(30, 136, 229, 0.15);
+}
+
+.objective-number {
+    font-size: 2rem;
+    color: var(--primary-blue);
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    opacity: 0.3;
+}
+
+.objective-item h3 {
+    font-size: 1.25rem;
+    color: var(--primary-blue);
+    font-weight: 700;
+    margin: 0 0 1rem 0;
+}
+
+.objective-item p {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: var(--text-dark);
+    margin: 0;
+}
+
+/* CATEGORIES GRID */
+.categories-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+}
+
+.category-card {
+    background: linear-gradient(135deg, rgba(30, 136, 229, 0.05) 0%, rgba(30, 136, 229, 0.1) 100%);
+    padding: 2rem;
+    border-radius: 8px;
+    text-align: center;
+    transition: all 0.3s ease;
+    border: 2px solid rgba(30, 136, 229, 0.1);
+}
+
+.category-card:hover {
+    transform: translateY(-8px);
+    border-color: var(--primary-blue);
+    box-shadow: 0 12px 24px rgba(30, 136, 229, 0.15);
+}
+
+.category-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    height: 60px;
+    background-color: var(--primary-blue);
+    border-radius: 50%;
+    margin: 0 auto 1rem;
+    color: var(--white);
+}
+
+.category-card h3 {
+    font-size: 1.25rem;
+    color: var(--primary-blue);
+    font-weight: 700;
+    margin: 0 0 0.5rem 0;
+}
+
+.category-card p {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: var(--text-dark);
+    margin: 0;
+}
+
+/* GRATITUDE SECTION */
+.gratitude-section {
+    background: linear-gradient(135deg, rgba(30, 136, 229, 0.05) 0%, rgba(30, 136, 229, 0.1) 100%);
+}
+
+.gratitude-intro {
+    font-size: 1rem;
+    line-height: 1.8;
+    color: var(--text-dark);
+    margin-bottom: 2rem;
+    font-style: italic;
+}
+
+.gratitude-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.gratitude-item {
+    padding: 1.5rem;
+    background-color: var(--white);
+    border-radius: 6px;
+    border-left: 4px solid var(--primary-blue);
+}
+
+.gratitude-item h4 {
+    font-size: 1rem;
+    color: var(--primary-blue);
+    font-weight: 700;
+    margin: 0 0 0.5rem 0;
+}
+
+.gratitude-item p {
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: var(--text-dark);
+    margin: 0;
+}
+
+.closing-text {
+    font-size: 1rem;
+    line-height: 1.8;
+    color: var(--text-dark);
+    text-align: justify;
+    margin: 0;
+    padding-top: 1rem;
+    border-top: 2px solid rgba(30, 136, 229, 0.2);
+}
+
+/* CLOSING SECTION */
+.closing-section {
+    text-align: center;
+    padding: 2rem !important;
+}
+
+.closing-greeting {
+    font-size: 1.1rem;
+    color: var(--primary-blue);
+    font-weight: 600;
+    margin-bottom: 2rem;
+    margin-top: 0;
+}
+
+.closing-date {
+    font-size: 1rem;
+    line-height: 1.8;
+    color: var(--text-dark);
+    margin: 0;
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+/* Tablet */
+@media (max-width: 1024px) {
+    .hero-content {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    .hero-title {
+        font-size: 2.5rem;
+    }
+
+    .visi-misi-grid,
+    .gratitude-list {
+        grid-template-columns: 1fr;
+    }
+
+    .objectives-grid,
+    .categories-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    .sambutan-hero {
+        padding: 2rem 0;
+        margin-bottom: 2rem;
+    }
+
+    .hero-text {
+        padding-left: 0;
+    }
+
+    .hero-title {
+        font-size: 2rem;
+    }
+
+    .hero-subtitle {
+        font-size: 1rem;
+    }
+
+    .hero-image {
+        max-height: 250px;
+    }
+
+    .content-section {
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .section-header {
+        margin-bottom: 1.5rem;
+    }
+
+    .section-title {
+        font-size: 1.5rem;
+    }
+
+    .section-body {
+        padding: 0;
+    }
+
+    .main-text,
+    .intro-text,
+    .gratitude-intro,
+    .closing-text {
+        font-size: 0.95rem;
+    }
+
+    .visi-misi-card,
+    .objective-item,
+    .category-card,
+    .gratitude-item {
+        padding: 1.5rem;
+    }
+
+    .card-title,
+    .objective-item h3,
+    .category-card h3 {
+        font-size: 1.1rem;
+    }
+
+    .hero-title {
+        font-size: 2rem;
+        margin-bottom: 0.25rem;
+    }
+}
+
+/* Small Mobile */
+@media (max-width: 576px) {
+    .sambutan-hero {
+        padding: 1.5rem 0;
+    }
+
+    .hero-title {
+        font-size: 1.75rem;
+    }
+
+    .hero-subtitle {
+        font-size: 0.95rem;
+    }
+
+    .hero-image {
+        max-height: 200px;
+    }
+
+    .content-section {
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .header-line {
+        width: 3px;
+        height: 28px;
+    }
+
+    .section-title {
+        font-size: 1.25rem;
+    }
+
+    .main-text,
+    .intro-text {
+        font-size: 0.9rem;
+    }
+
+    .objectives-grid,
+    .categories-grid,
+    .gratitude-list {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .card-icon {
+        width: 50px;
+        height: 50px;
+    }
+
+    .objective-number {
+        font-size: 1.5rem;
+    }
+
+    .closing-section {
+        padding: 1.5rem !important;
+    }
+}

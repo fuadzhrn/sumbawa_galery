@@ -1,0 +1,53 @@
+/* Fix Upload Form Layout */
+
+.upload-form {
+    display: grid !important;
+    grid-template-columns: 1fr auto !important;
+    gap: 20px !important;
+    align-items: flex-end !important;
+}
+
+.upload-form .btn {
+    padding: 14px 32px !important;
+    white-space: nowrap !important;
+    display: inline-flex !important;
+}
+
+.upload-form .form-group {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 16px !important;
+}
+
+.form-group label {
+    font-size: 15px !important;
+    font-weight: 700 !important;
+    color: #374151 !important;
+    letter-spacing: 0.4px !important;
+    text-transform: uppercase !important;
+    opacity: 0.85 !important;
+}
+
+/* Responsive - Tablet */
+@media (max-width: 1024px) {
+    .upload-form {
+        grid-template-columns: 1fr !important;
+    }
+
+    .upload-form .btn {
+        width: 100% !important;
+        justify-content: center !important;
+    }
+}
+
+/* Responsive - Mobile */
+@media (max-width: 768px) {
+    .upload-form {
+        grid-template-columns: 1fr !important;
+    }
+
+    .upload-form .btn {
+        width: 100% !important;
+        justify-content: center !important;
+    }
+}
