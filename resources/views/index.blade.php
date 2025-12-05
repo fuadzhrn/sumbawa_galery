@@ -40,31 +40,5 @@
                     </div>
                 </section>
 
-                <!-- GALLERY SECTION -->
-                <section class="gallery-section">
-                    <h2 class="section-title">Galeri Karya Terbaru</h2>
-                    <div class="gallery-grid">
-                        <div class="gallery-item">
-                            <img src="{{ asset('assets/images/img1.png') }}" alt="Karya 1">
-                            <div class="gallery-info">
-                                <h3>Karya Seni 1</h3>
-                                <p>Rupa Kontemporer - 2024</p>
-                            </div>
-                        </div>
-                        <div class="gallery-item">
-                            <img src="{{ asset('assets/images/img2.png') }}" alt="Karya 2">
-                            <div class="gallery-info">
-                                <h3>Karya Seni 2</h3>
-                                <p>Musik Visual - 2024</p>
-                            </div>
-                        </div>
-                        <div class="gallery-item">
-                            <img src="{{ asset('assets/images/img3.png') }}" alt="Karya 3">
-                            <div class="gallery-info">
-                                <h3>Karya Seni 3</h3>
-                                <p>Film Pendek - 2024</p>
-                            </div>
-                        </div>
-                    </div>
-                </section>
+                
 @endsection

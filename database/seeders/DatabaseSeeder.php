@@ -17,10 +17,16 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        // Hanya create user jika belum ada
+        if (!User::where('email', 'test@example.com')->exists()) {
+            User::factory()->create([
+                'name' => 'Test User',
+                'email' => 'test@example.com',
+            ]);
+        }
+
+        // Seed Kategori
+        $this->call(KategoriSeeder::class);
 
         // Seed Sambutan Content
         $this->call(SambutanContentSeeder::class);

@@ -5,270 +5,171 @@
 @section('url-dummy', 'https://sumbawa-portal.local/rupa')
 
 @section('extra-css')
-    <link rel="stylesheet" href="{{ asset('css/rupa.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/kategori-detail.css') }}?v={{ time() }}">
 @endsection
 
 @section('content')
-<!-- PAGE TITLE -->
-<div class="page-header" id="pageHeader">
+<div class="page-header">
     <h2 class="page-title">Seniman Rupa</h2>
-    <p class="page-subtitle">Jelajahi karya-karya seni rupa dari seniman budaya Sumbawa</p>
+    <p class="page-subtitle">Jelajahi karya-karya rupa dari seniman budaya Sumbawa</p>
 </div>
 
-<!-- RUPA ARTISTS GRID -->
-<section class="rupa-section" id="rupaSection">
-    <div class="rupa-grid">
-        <!-- Card 1 -->
-        <div class="rupa-card">
+<section class="kategori-section">
+    <div class="kategori-grid">
+        @forelse($karyaSeni as $karya)
+        <div class="kategori-card">
             <div class="card-image">
-                <img src="{{ asset('assets/images/img1.png') }}" alt="Seniman 1">
-                <div class="artist-name-overlay">
-                    <h3 class="artist-name">Wayan Sudarta</h3>
-                </div>
-                <div class="views-badge">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="color: var(--primary-blue);"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
-                    <span class="views-count">1.2K</span>
+                @if($karya->media_type === 'image' && $karya->thumbnail)
+                    <img src="{{ asset($karya->thumbnail) }}" alt="{{ $karya->judul }}" class="card-img">
+                @elseif($karya->media_type === 'image' && $karya->media_path)
+                    <img src="{{ asset($karya->media_path) }}" alt="{{ $karya->judul }}" class="card-img">
+                @else
+                    <img src="{{ asset('assets/images/img1.png') }}" alt="{{ $karya->judul }}" class="card-img">
+                @endif
+                <div class="views-overlay">
+                    <svg class="views-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                    <span class="views-text">{{ $karya->views ?? 0 }}</span>
                 </div>
             </div>
-            <div class="card-body">
-                <button class="btn-biography" data-nama="Wayan Sudarta" data-kategori="Pelukis Tradisional" data-foto="{{ asset('assets/images/img1.png') }}">Biografi</button>
+            <div class="card-content">
+                <h3 class="card-title">{{ $karya->judul }}</h3>
+                <p class="card-artist">{{ $karya->user->name }}</p>
+                <button class="btn-biografi" 
+                    data-karya-id="{{ $karya->id }}"
+                    data-seniman-id="{{ $karya->user->seniman?->id }}"
+                    data-nama="{{ $karya->user->name }}" 
+                    data-kategori="{{ $karya->kategori->nama }}"
+                    data-foto="{{ $karya->user->seniman?->foto ? asset($karya->user->seniman->foto) : asset('assets/images/img1.png') }}">
+                    Lihat Biografi
+                </button>
             </div>
         </div>
-
-        <!-- Card 2 -->
-        <div class="rupa-card">
-            <div class="card-image">
-                <img src="{{ asset('assets/images/img2.png') }}" alt="Seniman 2">
-                <div class="artist-name-overlay">
-                    <h3 class="artist-name">Ketut Astawan</h3>
-                </div>
-                <div class="views-badge">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="color: var(--primary-blue);"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
-                    <span class="views-count">2.5K</span>
-                </div>
-            </div>
-            <div class="card-body">
-                <button class="btn-biography" data-nama="Ketut Astawan" data-kategori="Pematung Tradisional" data-foto="{{ asset('assets/images/img2.png') }}">Biografi</button>
-            </div>
+        @empty
+        <div style="grid-column: 1 / -1; text-align: center; padding: 60px 20px; color: #999;">
+            <p style="font-size: 16px;">Belum ada karya rupa</p>
         </div>
-
-        <!-- Card 3 -->
-        <div class="rupa-card">
-            <div class="card-image">
-                <img src="{{ asset('assets/images/img3.png') }}" alt="Seniman 3">
-                <div class="artist-name-overlay">
-                    <h3 class="artist-name">I Nyoman Sudana</h3>
-                </div>
-                <div class="views-badge">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="color: var(--primary-blue);"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
-                    <span class="views-count">892</span>
-                </div>
-            </div>
-            <div class="card-body">
-                <button class="btn-biography" data-nama="I Nyoman Sudana" data-kategori="Pengrajin Kayu Tradisional" data-foto="{{ asset('assets/images/img3.png') }}">Biografi</button>
-            </div>
-        </div>
-
-        <!-- Card 4 -->
-        <div class="rupa-card">
-            <div class="card-image">
-                <img src="{{ asset('assets/images/img1.png') }}" alt="Seniman 4">
-                <div class="artist-name-overlay">
-                    <h3 class="artist-name">Siti Rohayah</h3>
-                </div>
-                <div class="views-badge">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="color: var(--primary-blue);"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
-                    <span class="views-count">3.1K</span>
-                </div>
-            </div>
-            <div class="card-body">
-                <button class="btn-biography" data-nama="Siti Rohayah" data-kategori="Pelukis Batik Tradisional" data-foto="{{ asset('assets/images/img1.png') }}">Biografi</button>
-            </div>
-        </div>
-
-        <!-- Card 5 -->
-        <div class="rupa-card">
-            <div class="card-image">
-                <img src="{{ asset('assets/images/img2.png') }}" alt="Seniman 5">
-                <div class="artist-name-overlay">
-                    <h3 class="artist-name">Hendra Santoso</h3>
-                </div>
-                <div class="views-badge">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="color: var(--primary-blue);"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
-                    <span class="views-count">1.8K</span>
-                </div>
-            </div>
-            <div class="card-body">
-                <button class="btn-biography" data-nama="Hendra Santoso" data-kategori="Pengrajin Keramik Tradisional" data-foto="{{ asset('assets/images/img2.png') }}">Biografi</button>
-            </div>
-        </div>
-
-        <!-- Card 6 -->
-        <div class="rupa-card">
-            <div class="card-image">
-                <img src="{{ asset('assets/images/img3.png') }}" alt="Seniman 6">
-                <div class="artist-name-overlay">
-                    <h3 class="artist-name">Nur Azizah</h3>
-                </div>
-                <div class="views-badge">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="color: var(--primary-blue);"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
-                    <span class="views-count">2.7K</span>
-                </div>
-            </div>
-            <div class="card-body">
-                <button class="btn-biography" data-nama="Nur Azizah" data-kategori="Seniman Tenun Tradisional" data-foto="{{ asset('assets/images/img3.png') }}">Biografi</button>
-            </div>
-        </div>
-
-        <!-- Card 7 -->
-        <div class="rupa-card">
-            <div class="card-image">
-                <img src="{{ asset('assets/images/img1.png') }}" alt="Seniman 7">
-                <div class="artist-name-overlay">
-                    <h3 class="artist-name">Bambang Hartoyo</h3>
-                </div>
-                <div class="views-badge">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="color: var(--primary-blue);"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
-                    <span class="views-count">945</span>
-                </div>
-            </div>
-            <div class="card-body">
-                <button class="btn-biography" data-nama="Bambang Hartoyo" data-kategori="Pematung Batu Tradisional" data-foto="{{ asset('assets/images/img1.png') }}">Biografi</button>
-            </div>
-        </div>
-
-        <!-- Card 8 -->
-        <div class="rupa-card">
-            <div class="card-image">
-                <img src="{{ asset('assets/images/img2.png') }}" alt="Seniman 8">
-                <div class="artist-name-overlay">
-                    <h3 class="artist-name">Lina Kusumawati</h3>
-                </div>
-                <div class="views-badge">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="color: var(--primary-blue);"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
-                    <span class="views-count">2.2K</span>
-                </div>
-            </div>
-            <div class="card-body">
-                <button class="btn-biography" data-nama="Lina Kusumawati" data-kategori="Pelukis Kontemporer Tradisional" data-foto="{{ asset('assets/images/img2.png') }}">Biografi</button>
-            </div>
-        </div>
-
-        <!-- Card 9 -->
-        <div class="rupa-card">
-            <div class="card-image">
-                <img src="{{ asset('assets/images/img3.png') }}" alt="Seniman 9">
-                <div class="artist-name-overlay">
-                    <h3 class="artist-name">Suryanto Wijaya</h3>
-                </div>
-                <div class="views-badge">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="color: var(--primary-blue);"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
-                    <span class="views-count">1.6K</span>
-                </div>
-            </div>
-            <div class="card-body">
-                <button class="btn-biography" data-nama="Suryanto Wijaya" data-kategori="Pengrajin Perhiasan Tradisional" data-foto="{{ asset('assets/images/img3.png') }}">Biografi</button>
-            </div>
-        </div>
+        @endforelse
     </div>
 </section>
 
-<!-- BIOGRAFI MODAL -->
-<div id="biografiModal" class="biografi-modal hidden">
-    <div class="modal-overlay" onclick="hideBiografi()"></div>
+<!-- Modal -->
+<div id="biographyModal" class="modal">
     <div class="modal-content">
-        <button class="btn-close" onclick="hideBiografi()">&times;</button>
-        <div class="modal-body">
-            <div class="modal-left">
-                <img id="biografiFoto" src="" alt="Foto Seniman" class="modal-foto">
+        <div class="modal-header">
+            <h2>Profil Seniman</h2>
+            <button class="modal-close" onclick="closeBiographyModal()">&times;</button>
+        </div>
+        <div class="seniman-info">
+            <img id="senimanFoto" src="{{ asset('assets/images/img1.png') }}" alt="Seniman" class="seniman-foto">
+            <div class="seniman-nama" id="senimanNama"></div>
+            <div class="seniman-kategori"><strong>Kategori:</strong> <span id="senimanKategori"></span></div>
+            
+            <div class="biografi-section">
+                <div class="biografi-title">Biografi</div>
+                <p class="biografi-text" id="senimanBiografi"></p>
             </div>
-            <div class="modal-right">
-                <h2 id="biografiNama" class="modal-nama">Nama Seniman</h2>
-                <p id="biografiKategori" class="modal-kategori">Kategori</p>
-                
-                <section class="modal-biografi-section">
-                    <h3>Biografi</h3>
-                    <p id="biografiText" class="biografi-text">
-                        Wayan Sudarta adalah seorang seniman rupa tradisional yang berasal dari Sumbawa. Sejak usia dini, beliau telah mendalami berbagai teknik seni rupa tradisional Sumbawa yang kaya dan bernilai budaya tinggi. Dengan dedikasi penuh, Wayan telah berkontribusi dalam melestarikan warisan budaya seni rupa Sumbawa di era modern.
-                    </p>
-                </section>
 
-                <section class="modal-karya-section">
-                    <h3>Daftar Karya</h3>
-                    <ol class="karya-list">
-                        <li class="karya-item">
-                            <div class="karya-info">
-                                <a href="#" class="karya-title">Lukisan Lanskap Sumbawa Kuno</a>
-                                <p class="karya-desc">Karya seni rupa tradisional yang menggabungkan teknik lokal dengan estetika modern</p>
-                            </div>
-                            <button class="btn-lihat-karya">Lihat Karya</button>
-                        </li>
-                        <li class="karya-item">
-                            <div class="karya-info">
-                                <a href="#" class="karya-title">Patung Tokoh Legendaris Sumbawa</a>
-                                <p class="karya-desc">Karya seni pahat tradisional yang menampilkan karakter budaya setempat</p>
-                            </div>
-                            <button class="btn-lihat-karya">Lihat Karya</button>
-                        </li>
-                        <li class="karya-item">
-                            <div class="karya-info">
-                                <a href="#" class="karya-title">Keramik Hiasan Tradisional</a>
-                                <p class="karya-desc">Kolaborasi seni dengan pengrajin lokal yang menampilkan keunikan budaya Sumbawa</p>
-                            </div>
-                            <button class="btn-lihat-karya">Lihat Karya</button>
-                        </li>
-                        <li class="karya-item">
-                            <div class="karya-info">
-                                <a href="#" class="karya-title">Pameran Seni Rupa Tradisional 2023</a>
-                                <p class="karya-desc">Penyelenggaraan pameran besar yang menampilkan berbagai karya seniman rupa dari Sumbawa</p>
-                            </div>
-                            <button class="btn-lihat-karya">Lihat Karya</button>
-                        </li>
-                        <li class="karya-item">
-                            <div class="karya-info">
-                                <a href="#" class="karya-title">Dokumentasi Seni Rupa Kuno Sumbawa</a>
-                                <p class="karya-desc">Proyek penelitian dan dokumentasi seni rupa tradisional untuk generasi mendatang</p>
-                            </div>
-                            <button class="btn-lihat-karya">Lihat Karya</button>
-                        </li>
-                    </ol>
-                </section>
+            <div class="karya-section">
+                <div class="karya-title">Karya Seni</div>
+                <ul class="karya-list" id="karyaList">
+                </ul>
             </div>
         </div>
     </div>
 </div>
 
-@section('extra-js')
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Tambah event listener ke semua biography buttons
-            const biographyButtons = document.querySelectorAll('.btn-biography');
-            biographyButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    const nama = this.getAttribute('data-nama');
-                    const kategori = this.getAttribute('data-kategori');
-                    const foto = this.getAttribute('data-foto');
-                    showBiografi(nama, kategori, foto);
-                });
-            });
-        });
-
-        function showBiografi(nama, kategori, foto) {
-            document.getElementById('pageHeader').style.display = 'none';
-            document.getElementById('rupaSection').style.display = 'none';
-            document.getElementById('biografiModal').classList.remove('hidden');
-            document.getElementById('biografiNama').textContent = nama;
-            document.getElementById('biografiKategori').textContent = kategori;
-            document.getElementById('biografiFoto').src = foto;
-            console.log('Showing biografi for:', nama);
-        }
-
-        function hideBiografi() {
-            document.getElementById('pageHeader').style.display = 'block';
-            document.getElementById('rupaSection').style.display = 'block';
-            document.getElementById('biografiModal').classList.add('hidden');
-            console.log('Hiding biografi');
-        }
-    </script>
 @endsection
+
+@section('extra-js')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Attach click listeners to all biografi buttons
+    document.querySelectorAll('.btn-biografi').forEach(button => {
+        button.addEventListener('click', function() {
+            const karyaId = this.getAttribute('data-karya-id');
+            const senimanId = this.getAttribute('data-seniman-id');
+
+            if (!senimanId) {
+                alert('Seniman tidak ditemukan');
+                return;
+            }
+
+            // Fetch seniman profile
+            fetch(`/api/seniman/${senimanId}/profile`)
+                .then(response => response.json())
+                .then(data => {
+                    // Populate modal
+                    document.getElementById('senimanNama').textContent = data.nama;
+                    document.getElementById('senimanKategori').textContent = data.kategori;
+                    document.getElementById('senimanFoto').src = data.foto;
+                    document.getElementById('senimanBiografi').textContent = data.biografi;
+
+                    // Populate karya list
+                    const karyaList = document.getElementById('karyaList');
+                    karyaList.innerHTML = '';
+                    
+                    if (data.karya && data.karya.length > 0) {
+                        data.karya.forEach(karya => {
+                            const li = document.createElement('li');
+                            li.className = 'karya-item';
+                            li.innerHTML = `
+                                <a href="/karya/${karya.id}" class="karya-link">${karya.judul}</a>
+                                <div class="karya-kategori">${karya.kategori}</div>
+                            `;
+                            karyaList.appendChild(li);
+                        });
+                    } else {
+                        const li = document.createElement('li');
+                        li.className = 'no-karya';
+                        li.textContent = 'Belum ada karya lainnya';
+                        karyaList.appendChild(li);
+                    }
+
+                    // Show modal
+                    document.getElementById('biographyModal').style.display = 'block';
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Gagal memuat data seniman');
+                });
+
+            // Increment views
+            fetch(`/karya-seni/${karyaId}/increment-views`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Update views count in the UI
+                const button = document.querySelector(`.btn-biografi[data-karya-id="${karyaId}"]`);
+                if (button) {
+                    const card = button.closest('.kategori-card');
+                    const viewsText = card.querySelector('.views-text');
+                    if (viewsText) {
+                        viewsText.textContent = data.views;
+                    }
+                }
+            })
+            .catch(error => console.error('Error incrementing views:', error));
+        });
+    });
+
+    function closeBiographyModal() {
+        document.getElementById('biographyModal').style.display = 'none';
+    }
+
+    window.closeBiographyModal = closeBiographyModal;
+
+    // Close modal when clicking outside
+    window.addEventListener('click', function(event) {
+        const modal = document.getElementById('biographyModal');
+        if (event.target === modal) {
+            modal.style.display = 'none';
+        }
+    });
+});
+</script>
 @endsection

@@ -63,4 +63,20 @@ class User extends Authenticatable
     {
         return $this->role === 'seniman';
     }
+
+    /**
+     * Relationship: User has many KaryaSeni
+     */
+    public function karyaSeni()
+    {
+        return $this->hasMany(KaryaSeni::class);
+    }
+
+    /**
+     * Relationship: User has one Seniman
+     */
+    public function seniman()
+    {
+        return $this->hasOne(Seniman::class);
+    }
 }

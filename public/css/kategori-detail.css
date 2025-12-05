@@ -1,0 +1,478 @@
+/* ============================================
+   KATEGORI DETAIL PAGE STYLES
+   ============================================ */
+
+:root {
+    --primary-blue: #1e88e5;
+    --primary-blue-dark: #1565c0;
+    --text-dark: #333;
+    --text-light: #666;
+    --border-color: #eee;
+    --light-gray: #f5f5f5;
+    --white: #fff;
+}
+
+/* PAGE HEADER */
+.page-header {
+    text-align: center;
+    margin-bottom: 3rem;
+    padding-bottom: 2rem;
+    border-bottom: 2px solid var(--border-color);
+    position: relative;
+    z-index: 1;
+}
+
+.page-title {
+    font-size: 2.5rem;
+    color: var(--primary-blue);
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+    letter-spacing: -0.5px;
+}
+
+.page-subtitle {
+    font-size: 1rem;
+    color: var(--text-light);
+    font-weight: 400;
+}
+
+/* KATEGORI SECTION */
+.kategori-section {
+    width: 100%;
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+}
+
+.kategori-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2.5rem;
+    margin-bottom: 3rem;
+    width: 100%;
+}
+
+/* KATEGORI CARD */
+.kategori-card {
+    background-color: var(--white);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    min-width: 0;
+}
+
+.kategori-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 8px 24px rgba(30, 136, 229, 0.15);
+}
+
+/* CARD IMAGE */
+.card-image {
+    position: relative;
+    width: 100%;
+    height: 280px;
+    overflow: hidden;
+    background-color: var(--light-gray);
+}
+
+.card-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.kategori-card:hover .card-img {
+    transform: scale(1.05);
+}
+
+/* VIEWS OVERLAY */
+.views-overlay {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background-color: rgba(30, 136, 229, 0.9);
+    color: white;
+    padding: 8px 12px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.views-icon {
+    font-size: 16px;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+}
+
+.views-text {
+    font-weight: 700;
+}
+
+/* CARD CONTENT */
+.card-content {
+    padding: 1.5rem;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.card-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin: 0 0 0.5rem 0;
+    line-height: 1.4;
+}
+
+.card-artist {
+    font-size: 0.9rem;
+    color: var(--text-light);
+    margin: 0 0 1rem 0;
+}
+
+/* BUTTON BIOGRAFI */
+.btn-biografi {
+    background: linear-gradient(135deg, var(--primary-blue), var(--primary-blue-dark));
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: auto;
+}
+
+.btn-biografi:hover {
+    background: linear-gradient(135deg, var(--primary-blue-dark), #0d47a1);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(30, 136, 229, 0.3);
+}
+
+.btn-biografi:active {
+    transform: translateY(0);
+}
+
+/* MODAL STYLING */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    overflow-y: auto;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { background-color: rgba(0, 0, 0, 0); }
+    to { background-color: rgba(0, 0, 0, 0.5); }
+}
+
+.modal-content {
+    background-color: #fff;
+    margin: 5% auto;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    width: 90%;
+    max-width: 600px;
+    max-height: 80vh;
+    overflow-y: auto;
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #f0f0f0;
+}
+
+.modal-header h2 {
+    margin: 0;
+    font-size: 24px;
+    color: #1e88e5;
+    font-weight: 700;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 32px;
+    cursor: pointer;
+    color: #999;
+    transition: all 0.2s ease;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+
+.modal-close:hover {
+    background-color: #f5f5f5;
+    color: #333;
+}
+
+.seniman-info {
+    text-align: center;
+}
+
+.seniman-foto {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin: 0 auto 20px;
+    display: block;
+    border: 4px solid #1e88e5;
+    box-shadow: 0 4px 12px rgba(30, 136, 229, 0.2);
+}
+
+.seniman-nama {
+    font-size: 22px;
+    font-weight: 700;
+    color: #1e88e5;
+    margin: 10px 0;
+}
+
+.seniman-kategori {
+    font-size: 14px;
+    color: #666;
+    margin: 5px 0 25px;
+}
+
+.biografi-section {
+    margin: 20px 0;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-left: 4px solid #1e88e5;
+    border-radius: 6px;
+    text-align: left;
+}
+
+.biografi-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #333;
+    margin: 0 0 12px 0;
+}
+
+.biografi-text {
+    font-size: 14px;
+    color: #555;
+    line-height: 1.6;
+    margin: 0;
+}
+
+.karya-section {
+    margin: 20px 0;
+    text-align: left;
+}
+
+.karya-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #333;
+    margin: 0 0 15px 0;
+}
+
+.karya-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.karya-item {
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+    transition: all 0.2s ease;
+}
+
+.karya-item:last-child {
+    border-bottom: none;
+}
+
+.karya-item:hover {
+    padding-left: 10px;
+}
+
+.karya-link {
+    color: #1e88e5;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.karya-link:hover {
+    color: #1565c0;
+    text-decoration: underline;
+}
+
+.karya-kategori {
+    font-size: 12px;
+    color: #999;
+    margin-top: 4px;
+}
+
+.no-karya {
+    font-size: 14px;
+    color: #999;
+    padding: 10px;
+    text-align: center;
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+/* For content area within sidebar layout - usually around 1000px+ width */
+@media (max-width: 1200px) {
+    .kategori-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 2rem;
+    }
+
+    .page-title {
+        font-size: 2rem;
+    }
+
+    .page-header {
+        margin-bottom: 2rem;
+    }
+}
+
+/* Tablet - content area narrower */
+@media (max-width: 1024px) {
+    .kategori-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+    }
+
+    .page-title {
+        font-size: 1.75rem;
+    }
+
+    .page-header {
+        margin-bottom: 1.5rem;
+        padding-bottom: 1.5rem;
+    }
+
+    .card-image {
+        height: 240px;
+    }
+}
+
+/* Ipad/Small Tablet */
+@media (max-width: 900px) {
+    .kategori-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .page-title {
+        font-size: 1.5rem;
+    }
+
+    .card-image {
+        height: 220px;
+    }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    .kategori-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .page-header {
+        margin-bottom: 2rem;
+        padding-bottom: 1.5rem;
+    }
+
+    .page-title {
+        font-size: 1.5rem;
+    }
+
+    .page-subtitle {
+        font-size: 0.9rem;
+    }
+
+    .card-image {
+        height: 220px;
+    }
+
+    .card-title {
+        font-size: 1rem;
+    }
+
+    .card-content {
+        padding: 1.25rem;
+    }
+
+    .btn-biografi {
+        padding: 0.65rem 1.25rem;
+        font-size: 0.9rem;
+    }
+}
+
+/* Small Mobile */
+@media (max-width: 576px) {
+    .kategori-grid {
+        gap: 1rem;
+    }
+
+    .page-title {
+        font-size: 1.25rem;
+    }
+
+    .card-image {
+        height: 180px;
+    }
+
+    .card-content {
+        padding: 1rem;
+    }
+
+    .btn-biografi {
+        padding: 0.5rem 1rem;
+        font-size: 0.8rem;
+    }
+}

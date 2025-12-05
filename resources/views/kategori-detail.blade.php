@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
-@section('title', 'Film - Portal Karya Seniman Budaya Sumbawa')
+@section('title', $kategori->nama . ' - Portal Karya Seniman Budaya Sumbawa')
 
-@section('url-dummy', 'https://sumbawa-portal.local/film')
+@section('url-dummy', 'https://sumbawa-portal.local/' . $kategori->slug)
 
 @section('extra-css')
     <link rel="stylesheet" href="{{ asset('css/kategori-detail.css') }}?v={{ time() }}">
@@ -10,8 +10,8 @@
 
 @section('content')
 <div class="page-header">
-    <h2 class="page-title">Seniman Film</h2>
-    <p class="page-subtitle">Jelajahi karya-karya film dari seniman budaya Sumbawa</p>
+    <h2 class="page-title">Seniman {{ $kategori->nama }}</h2>
+    <p class="page-subtitle">Jelajahi karya-karya {{ strtolower($kategori->nama) }} dari seniman budaya Sumbawa</p>
 </div>
 
 <section class="kategori-section">
@@ -46,7 +46,7 @@
         </div>
         @empty
         <div style="grid-column: 1 / -1; text-align: center; padding: 60px 20px; color: #999;">
-            <p style="font-size: 16px;">Belum ada karya film</p>
+            <p style="font-size: 16px;">Belum ada karya {{ strtolower($kategori->nama) }}</p>
         </div>
         @endforelse
     </div>

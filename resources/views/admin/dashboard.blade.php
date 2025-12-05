@@ -38,7 +38,7 @@
                 <i class="fas fa-users"></i>
             </div>
             <div class="stat-info">
-                <h3 class="stat-number">{{ \App\Models\User::where('role', 'seniman')->count() }}</h3>
+                <h3 class="stat-number">{{ $totalSeniman }}</h3>
                 <p class="stat-label">Total Seniman</p>
             </div>
         </div>
@@ -48,7 +48,7 @@
                 <i class="fas fa-user-check"></i>
             </div>
             <div class="stat-info">
-                <h3 class="stat-number">{{ \App\Models\User::where('role', 'seniman')->where('is_active', 1)->count() }}</h3>
+                <h3 class="stat-number">{{ $totalSenimanAktif }}</h3>
                 <p class="stat-label">Seniman Aktif</p>
             </div>
         </div>
@@ -58,27 +58,19 @@
                 <i class="fas fa-music"></i>
             </div>
             <div class="stat-info">
-                <h3 class="stat-number">125</h3>
-                <p class="stat-label">Total Karya</p>
+                <h3 class="stat-number">{{ $totalKarya }}</h3>
+                <p class="stat-label">Total Karya Diterima</p>
             </div>
         </div>
 
-        <div class="stat-card">
-            <div class="stat-icon" style="background: rgba(249, 115, 22, 0.1); color: #f97316;">
-                <i class="fas fa-chart-line"></i>
-            </div>
-            <div class="stat-info">
-                <h3 class="stat-number">1.2K</h3>
-                <p class="stat-label">Total Views</p>
-            </div>
-        </div>
+       
 
         <div class="stat-card">
             <div class="stat-icon" style="background: rgba(14, 165, 233, 0.1); color: #0ea5e9;">
                 <i class="fas fa-images"></i>
             </div>
             <div class="stat-info">
-                <h3 class="stat-number">{{ \App\Models\SliderImage::count() }}</h3>
+                <h3 class="stat-number">{{ $totalSlider }}</h3>
                 <p class="stat-label">Foto Slider</p>
             </div>
         </div>
@@ -86,17 +78,9 @@
 
     <!-- Action Buttons -->
     <div class="action-buttons">
-        <a href="#" class="btn btn-primary">
-            <i class="fas fa-user-plus"></i>
-            Tambah Seniman
-        </a>
-        <a href="#" class="btn btn-secondary">
-            <i class="fas fa-cog"></i>
-            Pengaturan
-        </a>
-        <a href="#" class="btn btn-secondary">
-            <i class="fas fa-file-alt"></i>
-            Laporan
+        <a href="{{ route('admin.karya-seni') }}" class="btn btn-primary">
+            <i class="fas fa-images"></i>
+            Kelola Karya Seni
         </a>
     </div>
 
@@ -118,7 +102,7 @@
                         <th>Email</th>
                         <th>Status</th>
                         <th>Bergabung</th>
-                        <th>Aksi</th>
+
                     </tr>
                 </thead>
                 <tbody>
@@ -137,16 +121,7 @@
                                 </span>
                             </td>
                             <td>{{ $user->created_at->format('d M Y') }}</td>
-                            <td>
-                                <div class="action-menu">
-                                    <button class="btn-icon" title="Edit">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                    <button class="btn-icon" title="Hapus">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </div>
-                            </td>
+                            
                         </tr>
                     @empty
                         <tr>

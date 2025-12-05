@@ -3,10 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Portal Karya Seniman Budaya Sumbawa')</title>
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     @yield('extra-css')
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.css">
+    @stack('styles')
 </head>
 <body>
     <div class="container-main">
@@ -14,10 +17,6 @@
         <header class="header">
             <div class="header-content">
                 <h1 class="header-title">Aplikasi Portal Karya Seniman Budaya Sumbawa</h1>
-                <div class="header-url">
-                    <label class="url-label">URL (dummy):</label>
-                    <input type="text" class="url-input" value="@yield('url-dummy', 'https://sumbawa-portal.local/gallery')" readonly>
-                </div>
             </div>
         </header>
 
@@ -48,12 +47,7 @@
                                 <a href="/admin/karya-seni" class="nav-link @if(request()->path() === 'admin/karya-seni') active @endif" data-page="karya-seni">Karya Seni</a>
                             </li>
                             <li class="nav-item" style="margin-top: auto; padding-top: 20px; border-top: 1px solid #e5e7eb;">
-                                <form method="POST" action="/logout" style="width: 100%;">
-                                    @csrf
-                                    <button type="submit" class="nav-link" style="width: 100%; text-align: left; background: none; color: inherit; cursor: pointer;">
-                                        <i class="fas fa-sign-out-alt"></i> Logout
-                                    </button>
-                                </form>
+                               
                             </li>
                         @elseif(Auth::check() && Auth::user()->isSeniman())
                             <!-- SENIMAN MENU -->
@@ -63,22 +57,20 @@
                             <li class="nav-divider">
                                 <span class="divider-label">Kategori Seni</span>
                             </li>
+                            @php
+                                $kategoris = \App\Models\Kategori::all();
+                            @endphp
+                            @forelse($kategoris as $kategori)
                             <li class="nav-item">
-                                <a href="/musik" class="nav-link @if(request()->path() === 'GalerySumbawa/musik' || request()->path() === 'musik') active @endif" data-page="musik">Musik</a>
+                                <a href="/{{ $kategori->slug }}" class="nav-link @if(request()->path() === $kategori->slug) active @endif" data-page="{{ $kategori->slug }}">{{ $kategori->nama }}</a>
                             </li>
+                            @empty
                             <li class="nav-item">
-                                <a href="/rupa" class="nav-link @if(request()->path() === 'GalerySumbawa/rupa' || request()->path() === 'rupa') active @endif" data-page="rupa">Rupa</a>
+                                <span class="nav-link" style="color: #9ca3af; cursor: default;">Belum ada kategori</span>
                             </li>
-                            <li class="nav-item">
-                                <a href="/film" class="nav-link @if(request()->path() === 'GalerySumbawa/film' || request()->path() === 'film') active @endif" data-page="film">Film</a>
-                            </li>
+                            @endforelse
                             <li class="nav-item" style="margin-top: auto; padding-top: 20px; border-top: 1px solid #e5e7eb;">
-                                <form method="POST" action="/logout" style="width: 100%;">
-                                    @csrf
-                                    <button type="submit" class="nav-link" style="width: 100%; text-align: left; background: none; color: inherit; cursor: pointer;">
-                                        <i class="fas fa-sign-out-alt"></i> Logout
-                                    </button>
-                                </form>
+                                
                             </li>
                         @else
                             <!-- PUBLIC MENU -->
@@ -94,15 +86,18 @@
                                 <span class="divider-label">Kategori Seni</span>
                             </li>
                             
+                            @php
+                                $kategoris = \App\Models\Kategori::all();
+                            @endphp
+                            @forelse($kategoris as $kategori)
                             <li class="nav-item">
-                                <a href="/musik" class="nav-link @if(request()->path() === 'GalerySumbawa/musik' || request()->path() === 'musik') active @endif" data-page="musik">Musik</a>
+                                <a href="/{{ $kategori->slug }}" class="nav-link @if(request()->path() === $kategori->slug) active @endif" data-page="{{ $kategori->slug }}">{{ $kategori->nama }}</a>
                             </li>
+                            @empty
                             <li class="nav-item">
-                                <a href="/rupa" class="nav-link @if(request()->path() === 'GalerySumbawa/rupa' || request()->path() === 'rupa') active @endif" data-page="rupa">Rupa</a>
+                                <span class="nav-link" style="color: #9ca3af; cursor: default;">Belum ada kategori</span>
                             </li>
-                            <li class="nav-item">
-                                <a href="/film" class="nav-link @if(request()->path() === 'GalerySumbawa/film' || request()->path() === 'film') active @endif" data-page="film">Film</a>
-                            </li>
+                            @endforelse
                         @endif
                     </ul>
                 </nav>
@@ -117,5 +112,6 @@
 
     <script src="{{ asset('js/script.js') }}"></script>
     @yield('extra-js')
+    @stack('scripts')
 </body>
 </html>
