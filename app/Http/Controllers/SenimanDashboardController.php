@@ -6,6 +6,7 @@ use App\Models\KaryaSeni;
 use App\Models\Kategori;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class SenimanDashboardController extends Controller
 {
@@ -47,40 +48,75 @@ class SenimanDashboardController extends Controller
             'thumbnail' => 'nullable|image|max:2048',
         ]);
 
-        $validated['user_id'] = Auth::id();
-        $validated['status'] = 'pending';
+        try {
+            $validated['user_id'] = Auth::id();
+            $validated['status'] = 'pending';
 
-        // Handle media file upload or URL
-        if ($request->hasFile('media_file')) {
-            $mediaFile = $request->file('media_file');
-            $mediaDir = 'karya_seni/' . Auth::id();
+            // Handle media file upload or URL
+            if ($request->hasFile('media_file')) {
+                $mediaFile = $request->file('media_file');
+                $userDir = Auth::id();
+                $mediaDir = public_path("assets/karya_seni/{$userDir}");
+                
+                // Create user directory if it doesn't exist
+                if (!is_dir($mediaDir)) {
+                    mkdir($mediaDir, 0755, true);
+                }
+                
+                // Generate unique filename
+                $timestamp = time();
+                $random = substr(uniqid(), -8);
+                $extension = strtolower($mediaFile->getClientOriginalExtension());
+                $filename = "karya-{$timestamp}-{$random}.{$extension}";
+                
+                // Move file directly to public/assets
+                $moved = $mediaFile->move($mediaDir, $filename);
+                if (!$moved) {
+                    throw new \Exception('Gagal memindahkan file media ke direktori karya seni');
+                }
+                $validated['media_path'] = "assets/karya_seni/{$userDir}/{$filename}";
+            } elseif ($request->filled('media_url')) {
+                // Accept URL for any media type (image, video, youtube)
+                $validated['media_path'] = $request->input('media_url');
+            }
+
+            // Handle thumbnail upload
+            if ($request->hasFile('thumbnail')) {
+                $thumbnail = $request->file('thumbnail');
+                $userDir = Auth::id();
+                $thumbDir = public_path("assets/thumbnails/{$userDir}");
+                
+                // Create user directory if it doesn't exist
+                if (!is_dir($thumbDir)) {
+                    mkdir($thumbDir, 0755, true);
+                }
+                
+                $thumbFilename = "thumb-" . time() . "-" . substr(uniqid(), -8) . ".jpg";
+                $moved = $thumbnail->move($thumbDir, $thumbFilename);
+                if (!$moved) {
+                    throw new \Exception('Gagal memindahkan file thumbnail');
+                }
+                $validated['thumbnail'] = "assets/thumbnails/{$userDir}/{$thumbFilename}";
+            }
+
+            $karya = KaryaSeni::create($validated);
             
-            // Generate unique filename
-            $timestamp = time();
-            $random = substr(uniqid(), -8);
-            $extension = strtolower($mediaFile->getClientOriginalExtension());
-            $filename = "karya-{$timestamp}-{$random}.{$extension}";
-            
-            // Store file
-            $mediaPath = $mediaFile->storeAs($mediaDir, $filename, 'public');
-            $validated['media_path'] = 'storage/' . $mediaPath;
-        } elseif ($request->filled('media_url')) {
-            // Accept URL for any media type (image, video, youtube)
-            $validated['media_path'] = $request->input('media_url');
+            if (!$karya) {
+                throw new \Exception('Gagal menyimpan data karya seni ke database');
+            }
+
+            return redirect()->route('seniman.dashboard')->with('success', 'Karya berhasil diajukan! Tunggu persetujuan admin.');
+        } catch (\Exception $e) {
+            Log::error('Karya Seni Upload Error: ' . $e->getMessage(), [
+                'user_id' => Auth::id(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+            ]);
+
+            return redirect()->back()
+                ->with('error', 'Gagal mengajukan karya: ' . $e->getMessage())
+                ->withInput();
         }
-
-        // Handle thumbnail upload
-        if ($request->hasFile('thumbnail')) {
-            $thumbnail = $request->file('thumbnail');
-            $thumbDir = 'thumbnails/' . Auth::id();
-            $thumbFilename = "thumb-" . time() . "-" . substr(uniqid(), -8) . ".jpg";
-            $thumbnailPath = $thumbnail->storeAs($thumbDir, $thumbFilename, 'public');
-            $validated['thumbnail'] = 'storage/' . $thumbnailPath;
-        }
-
-        KaryaSeni::create($validated);
-
-        return redirect()->route('seniman.dashboard')->with('success', 'Karya berhasil diajukan! Tunggu persetujuan admin.');
     }
 
     /**
@@ -109,6 +145,22 @@ class SenimanDashboardController extends Controller
         // Only allow delete if pending
         if ($karyaSeni->status !== 'pending') {
             return redirect()->back()->with('error', 'Hanya karya yang belum disetujui yang bisa dihapus');
+        }
+
+        // Delete media files if they exist (not URLs)
+        if ($karyaSeni->media_path && !filter_var($karyaSeni->media_path, FILTER_VALIDATE_URL)) {
+            $mediaFilePath = public_path($karyaSeni->media_path);
+            if (file_exists($mediaFilePath)) {
+                unlink($mediaFilePath);
+            }
+        }
+
+        // Delete thumbnail if it exists
+        if ($karyaSeni->thumbnail) {
+            $thumbFilePath = public_path($karyaSeni->thumbnail);
+            if (file_exists($thumbFilePath)) {
+                unlink($thumbFilePath);
+            }
         }
 
         $karyaSeni->delete();

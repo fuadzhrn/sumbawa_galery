@@ -402,35 +402,71 @@
             xhr.addEventListener('load', () => {
                 clearInterval(interval);
                 
-                if (xhr.status === 200) {
-                    // Success animation
-                    progressBar.style.width = '100%';
-                    progressBar.style.background = 'linear-gradient(90deg, #10b981, #059669)';
-                    progressText.textContent = '✓ Upload Selesai!';
+                try {
+                    const response = JSON.parse(xhr.responseText);
                     
-                    // Show success message
-                    setTimeout(() => {
-                        uploadProgress.style.display = 'none';
-                        uploadForm.reset();
-                        uploadBtn.disabled = false;
-                        progressBar.style.background = 'linear-gradient(90deg, #3b82f6, #1d4ed8)';
-                        fileCheck.classList.remove('show');
-                        dropZone.classList.remove('file-selected');
+                    if (xhr.status === 200 && response.success) {
+                        // Success animation
+                        progressBar.style.width = '100%';
+                        progressBar.style.background = 'linear-gradient(90deg, #10b981, #059669)';
+                        progressText.textContent = '✓ Upload Selesai!';
                         
-                        // Reload page to show new image
-                        location.reload();
-                    }, 1500);
-                } else {
-                    // Error
-                    progressBar.style.width = '100%';
-                    progressBar.style.background = 'linear-gradient(90deg, #ef4444, #dc2626)';
-                    progressText.textContent = '✗ Upload Gagal!';
-                    
-                    setTimeout(() => {
-                        uploadProgress.style.display = 'none';
-                        uploadBtn.disabled = false;
-                        progressBar.style.background = 'linear-gradient(90deg, #3b82f6, #1d4ed8)';
-                    }, 1500);
+                        // Show success message
+                        setTimeout(() => {
+                            uploadProgress.style.display = 'none';
+                            uploadForm.reset();
+                            uploadBtn.disabled = false;
+                            progressBar.style.background = 'linear-gradient(90deg, #3b82f6, #1d4ed8)';
+                            fileCheck.classList.remove('show');
+                            dropZone.classList.remove('file-selected');
+                            
+                            // Reload page to show new image
+                            location.reload();
+                        }, 1500);
+                    } else {
+                        // Error
+                        const errorMessage = response.message || 'Upload Gagal! Periksa log untuk detail.';
+                        progressBar.style.width = '100%';
+                        progressBar.style.background = 'linear-gradient(90deg, #ef4444, #dc2626)';
+                        progressText.textContent = '✗ ' + errorMessage;
+                        
+                        console.error('Upload Error:', response);
+                        
+                        setTimeout(() => {
+                            uploadProgress.style.display = 'none';
+                            uploadBtn.disabled = false;
+                            progressBar.style.background = 'linear-gradient(90deg, #3b82f6, #1d4ed8)';
+                        }, 1500);
+                    }
+                } catch (e) {
+                    // If not JSON response, check HTTP status
+                    if (xhr.status === 200) {
+                        progressBar.style.width = '100%';
+                        progressBar.style.background = 'linear-gradient(90deg, #10b981, #059669)';
+                        progressText.textContent = '✓ Upload Selesai!';
+                        
+                        setTimeout(() => {
+                            uploadProgress.style.display = 'none';
+                            uploadForm.reset();
+                            uploadBtn.disabled = false;
+                            progressBar.style.background = 'linear-gradient(90deg, #3b82f6, #1d4ed8)';
+                            fileCheck.classList.remove('show');
+                            dropZone.classList.remove('file-selected');
+                            
+                            location.reload();
+                        }, 1500);
+                    } else {
+                        progressBar.style.width = '100%';
+                        progressBar.style.background = 'linear-gradient(90deg, #ef4444, #dc2626)';
+                        progressText.textContent = '✗ Upload Gagal! (HTTP ' + xhr.status + ')';
+                        console.error('Parse Error:', e, xhr.responseText);
+                        
+                        setTimeout(() => {
+                            uploadProgress.style.display = 'none';
+                            uploadBtn.disabled = false;
+                            progressBar.style.background = 'linear-gradient(90deg, #3b82f6, #1d4ed8)';
+                        }, 1500);
+                    }
                 }
             });
 
@@ -438,7 +474,8 @@
                 clearInterval(interval);
                 progressBar.style.width = '100%';
                 progressBar.style.background = 'linear-gradient(90deg, #ef4444, #dc2626)';
-                progressText.textContent = '✗ Upload Gagal!';
+                progressText.textContent = '✗ Upload Gagal! Periksa koneksi.';
+                console.error('Network Error during upload');
                 
                 setTimeout(() => {
                     uploadProgress.style.display = 'none';

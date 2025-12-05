@@ -24,10 +24,6 @@ Route::get('/rupa', [KategoriDetailController::class, 'show'])->defaults('slug',
 
 Route::get('/film', [KategoriDetailController::class, 'show'])->defaults('slug', 'film');
 
-Route::get('/biografi', function () {
-    return view('biografi');
-});
-
 // Test route for kategori-detail debugging
 Route::get('/test-kategori', function () {
     $kategori = \App\Models\Kategori::where('slug', 'tari-tradisional')->firstOrFail();

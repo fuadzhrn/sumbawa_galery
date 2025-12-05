@@ -38,7 +38,7 @@
             <div class="form-group">
                 <label>Foto Saat Ini</label>
                 <div class="current-image preview-large">
-                    <img src="{{ url('storage/' . $sambutan->hero_image) }}" alt="Hero Sambutan">
+                    <img src="{{ asset($sambutan->hero_image) }}" alt="Hero Sambutan">
                 </div>
             </div>
             <div class="form-group">
@@ -61,7 +61,7 @@
                     <div class="form-group">
                         <label for="foto_visi">Foto Visi</label>
                         <div class="current-image preview-medium">
-                            <img src="{{ url('storage/' . $sambutan->visi_image) }}" alt="Visi">
+                            <img src="{{ asset($sambutan->visi_image) }}" alt="Visi">
                         </div>
                         <div class="file-input-wrapper" style="margin-top: 15px;">
                             <input type="file" id="foto_visi" name="visi_image" accept="image/*">
@@ -89,7 +89,7 @@
                     <div class="form-group">
                         <label for="foto_misi">Foto Misi</label>
                         <div class="current-image preview-medium">
-                            <img src="{{ url('storage/' . $sambutan->misi_image) }}" alt="Misi">
+                            <img src="{{ asset($sambutan->misi_image) }}" alt="Misi">
                         </div>
                         <div class="file-input-wrapper" style="margin-top: 15px;">
                             <input type="file" id="foto_misi" name="misi_image" accept="image/*">
@@ -122,7 +122,7 @@
                     <div class="objective-image">
                         <label>Foto</label>
                         <div class="current-image preview-small">
-                            <img src="{{ url('storage/' . $sambutan->obj1_image) }}" alt="Objective 1">
+                            <img src="{{ asset($sambutan->obj1_image) }}" alt="Objective 1">
                         </div>
                         <div class="file-input-wrapper">
                             <input type="file" id="obj1_foto" name="obj1_image" accept="image/*">
@@ -151,7 +151,7 @@
                     <div class="objective-image">
                         <label>Foto</label>
                         <div class="current-image preview-small">
-                            <img src="{{ url('storage/' . $sambutan->obj2_image) }}" alt="Objective 2">
+                            <img src="{{ asset($sambutan->obj2_image) }}" alt="Objective 2">
                         </div>
                         <div class="file-input-wrapper">
                             <input type="file" id="obj2_foto" name="obj2_image" accept="image/*">
@@ -180,7 +180,7 @@
                     <div class="objective-image">
                         <label>Foto</label>
                         <div class="current-image preview-small">
-                            <img src="{{ url('storage/' . $sambutan->obj3_image) }}" alt="Objective 3"
+                            <img src="{{ asset($sambutan->obj3_image) }}" alt="Objective 3">
                         </div>
                         <div class="file-input-wrapper">
                             <input type="file" id="obj3_foto" name="obj3_image" accept="image/*">
@@ -209,7 +209,7 @@
                     <div class="objective-image">
                         <label>Foto</label>
                         <div class="current-image preview-small">
-                            <img src="{{ url('storage/' . $sambutan->obj4_image) }}" alt="Objective 4">
+                            <img src="{{ asset($sambutan->obj4_image) }}" alt="Objective 4">
                         </div>
                         <div class="file-input-wrapper">
                             <input type="file" id="obj4_foto" name="obj4_image" accept="image/*">
@@ -238,6 +238,38 @@
     </form>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+    // Animasi centang saat gambar dipilih
+    document.addEventListener('DOMContentLoaded', function() {
+        const fileInputs = document.querySelectorAll('input[type="file"]');
+        
+        fileInputs.forEach(input => {
+            input.addEventListener('change', function() {
+                const wrapper = this.closest('.file-input-wrapper');
+                const label = wrapper.querySelector('.file-label');
+                const fileName = this.files[0]?.name || '';
+                
+                if (fileName) {
+                    // Tambahkan kelas untuk animasi
+                    wrapper.classList.add('file-selected');
+                    
+                    // Update label dengan nama file dan centang
+                    label.innerHTML = `<i class="ri-check-line"></i> ${fileName}`;
+                    
+                    // Auto remove effect setelah 3 detik jika user tidak submit
+                    setTimeout(() => {
+                        if (wrapper.classList.contains('file-selected')) {
+                            label.innerHTML = `<i class="ri-check-line" style="color: #27ae60;"></i> Siap diunggah`;
+                        }
+                    }, 2000);
+                }
+            });
+        });
+    });
+</script>
+@endpush
 
 @push('styles')
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@4.1.0/fonts/remixicon.css">
@@ -477,6 +509,74 @@
 
     .alert-success i {
         margin-right: 10px;
+    }
+
+    /* File Input Animation */
+    .file-input-wrapper {
+        position: relative;
+        overflow: hidden;
+    }
+
+    .file-label {
+        display: inline-block;
+        padding: 12px 20px;
+        background: #f8f9fa;
+        border: 2px dashed #667eea;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-weight: 500;
+        color: #666;
+        width: 100%;
+        text-align: center;
+    }
+
+    .file-input-wrapper:hover .file-label {
+        background: #f0f1ff;
+        border-color: #764ba2;
+        color: #764ba2;
+    }
+
+    .file-input-wrapper.file-selected .file-label {
+        background: #f0fff4;
+        border-color: #27ae60;
+        border-style: solid;
+        color: #27ae60;
+        animation: slideIn 0.4s ease-out;
+    }
+
+    .file-label i {
+        margin-right: 8px;
+        font-size: 1.1em;
+    }
+
+    @keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes checkmark {
+        0% {
+            transform: scale(0) rotate(-45deg);
+            opacity: 0;
+        }
+        50% {
+            transform: scale(1.2) rotate(0deg);
+        }
+        100% {
+            transform: scale(1) rotate(0deg);
+            opacity: 1;
+        }
+    }
+
+    .file-label i.ri-check-line {
+        animation: checkmark 0.5s ease-out;
     }
 </style>
 @endpush

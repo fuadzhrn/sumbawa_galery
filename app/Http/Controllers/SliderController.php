@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\SliderImage;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 
 class SliderController extends Controller
 {
@@ -22,7 +22,7 @@ class SliderController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'foto' => 'required|image|mimes:jpeg,png,jpg|max:5120'
         ], [
             'foto.required' => 'Foto harus dipilih',
@@ -32,11 +32,16 @@ class SliderController extends Controller
         ]);
 
         try {
-            // Ensure slider directory exists
-            $sliderDir = 'assets/slider';
-            if (!Storage::disk('public')->exists($sliderDir)) {
-                Storage::disk('public')->makeDirectory($sliderDir);
+            // Ensure slider directory exists in public/assets
+            $sliderDir = public_path('assets/slider');
+            if (!is_dir($sliderDir)) {
+                mkdir($sliderDir, 0755, true);
             }
+            
+            // Get file info BEFORE moving (temp file will be deleted after)
+            $fileSize = $request->file('foto')->getSize();
+            $mimeType = $request->file('foto')->getClientMimeType();
+            $originalName = $request->file('foto')->getClientOriginalName();
             
             // Generate unique filename: slider-{timestamp}-{random}.{ext}
             $timestamp = time();
@@ -44,27 +49,58 @@ class SliderController extends Controller
             $extension = strtolower($request->file('foto')->getClientOriginalExtension());
             $filename = "slider-{$timestamp}-{$random}.{$extension}";
             
-            // Store file
-            $path = $request->file('foto')->storeAs($sliderDir, $filename, 'public');
+            // Move file to public/assets/slider
+            $moved = $request->file('foto')->move($sliderDir, $filename);
+            
+            if (!$moved) {
+                throw new \Exception('Gagal memindahkan file ke direktori slider');
+            }
             
             // Get next order
             $nextOrder = (SliderImage::max('order') ?? -1) + 1;
             
-            // Create record
+            // Create record - store path as assets/slider/filename
             $slider = SliderImage::create([
                 'filename' => $filename,
-                'original_name' => $request->file('foto')->getClientOriginalName(),
-                'file_path' => 'storage/' . $path,
-                'mime_type' => $request->file('foto')->getClientMimeType(),
-                'file_size' => $request->file('foto')->getSize(),
+                'original_name' => $originalName,
+                'file_path' => 'assets/slider/' . $filename,
+                'mime_type' => $mimeType,
+                'file_size' => $fileSize,
                 'description' => null,
                 'order' => $nextOrder,
                 'is_active' => true
             ]);
 
+            if (!$slider) {
+                throw new \Exception('Gagal menyimpan data slider ke database');
+            }
+
+            // For AJAX requests, return JSON response
+            if ($request->wantsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Foto slider berhasil ditambahkan!',
+                    'slider' => $slider
+                ], 200);
+            }
+
             return redirect()->route('admin.photo-slider')
                 ->with('success', 'Foto slider berhasil ditambahkan!');
         } catch (\Exception $e) {
+            Log::error('Slider Upload Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTrace()
+            ]);
+
+            // For AJAX requests, return JSON error response
+            if ($request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Gagal mengunggah foto: ' . $e->getMessage()
+                ], 500);
+            }
+
             return redirect()->route('admin.photo-slider')
                 ->with('error', 'Gagal mengunggah foto: ' . $e->getMessage());
         }
@@ -78,9 +114,10 @@ class SliderController extends Controller
         try {
             $slider = SliderImage::findOrFail($id);
             
-            // Delete file
-            if (Storage::disk('public')->exists('assets/slider/' . $slider->filename)) {
-                Storage::disk('public')->delete('assets/slider/' . $slider->filename);
+            // Delete file from public/assets/slider
+            $filePath = public_path('assets/slider/' . $slider->filename);
+            if (file_exists($filePath)) {
+                unlink($filePath);
             }
             
             // Delete record

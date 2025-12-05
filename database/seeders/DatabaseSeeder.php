@@ -30,5 +30,8 @@ class DatabaseSeeder extends Seeder
 
         // Seed Sambutan Content
         $this->call(SambutanContentSeeder::class);
+
+        // Seed Test Karya Seni (creates sample seniman and karya)
+        $this->call(TestKaryaSeniSeeder::class);
     }
 }

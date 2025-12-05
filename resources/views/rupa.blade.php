@@ -89,20 +89,35 @@ document.addEventListener('DOMContentLoaded', function() {
             const karyaId = this.getAttribute('data-karya-id');
             const senimanId = this.getAttribute('data-seniman-id');
 
+            console.log('Biografi button clicked:', { karyaId, senimanId });
+
             if (!senimanId) {
+                console.error('Seniman ID tidak ditemukan');
                 alert('Seniman tidak ditemukan');
                 return;
             }
 
             // Fetch seniman profile
             fetch(`/api/seniman/${senimanId}/profile`)
-                .then(response => response.json())
+                .then(response => {
+                    console.log('API Response Status:', response.status);
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
                 .then(data => {
+                    console.log('Seniman data:', data);
+                    console.log('Foto URL:', data.foto);
+                    console.log('Biografi:', data.biografi);
+                    console.log('Nama:', data.nama);
+                    console.log('Kategori:', data.kategori);
+                    
                     // Populate modal
-                    document.getElementById('senimanNama').textContent = data.nama;
-                    document.getElementById('senimanKategori').textContent = data.kategori;
-                    document.getElementById('senimanFoto').src = data.foto;
-                    document.getElementById('senimanBiografi').textContent = data.biografi;
+                    document.getElementById('senimanNama').textContent = data.nama || 'Nama tidak tersedia';
+                    document.getElementById('senimanKategori').textContent = data.kategori || 'Kategori tidak tersedia';
+                    document.getElementById('senimanFoto').src = data.foto || '{{ asset("assets/images/img1.png") }}';
+                    document.getElementById('senimanBiografi').textContent = data.biografi || 'Deskripsi tidak tersedia';
 
                     // Populate karya list
                     const karyaList = document.getElementById('karyaList');
@@ -129,8 +144,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     document.getElementById('biographyModal').style.display = 'block';
                 })
                 .catch(error => {
-                    console.error('Error:', error);
-                    alert('Gagal memuat data seniman');
+                    console.error('Error fetching seniman:', error);
+                    alert('Gagal memuat data seniman: ' + error.message);
                 });
 
             // Increment views

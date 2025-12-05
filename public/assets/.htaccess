@@ -1,0 +1,8 @@
+# Allow access to asset files
+<FilesMatch "\.(jpg|jpeg|png|gif|webp|mp4|webm|pdf)$">
+    Order allow,deny
+    Allow from all
+</FilesMatch>
+
+# Disable PHP execution in uploads (security)
+php_flag engine off

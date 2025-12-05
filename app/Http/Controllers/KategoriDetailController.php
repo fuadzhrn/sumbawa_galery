@@ -56,28 +56,35 @@ class KategoriDetailController extends Controller
      */
     public function getSenimanProfile($senimanId)
     {
-        $seniman = Seniman::with('user', 'kategori')->findOrFail($senimanId);
-        
-        // Get all approved karya seni for this seniman
-        $karya = KaryaSeni::where('user_id', $seniman->user_id)
-            ->where('status', 'approved')
-            ->with(['kategori'])
-            ->orderBy('created_at', 'desc')
-            ->get()
-            ->map(function ($item) {
-                return [
-                    'id' => $item->id,
-                    'judul' => $item->judul,
-                    'kategori' => $item->kategori->nama,
-                ];
-            });
+        try {
+            $seniman = Seniman::with('user', 'kategori')->findOrFail($senimanId);
+            
+            // Get all approved karya seni for this seniman
+            $karya = KaryaSeni::where('user_id', $seniman->user_id)
+                ->where('status', 'approved')
+                ->with(['kategori'])
+                ->orderBy('created_at', 'desc')
+                ->get()
+                ->map(function ($item) {
+                    return [
+                        'id' => $item->id,
+                        'judul' => $item->judul,
+                        'kategori' => $item->kategori->nama,
+                    ];
+                });
 
-        return response()->json([
-            'nama' => $seniman->user->name,
-            'foto' => $seniman->foto ? asset($seniman->foto) : asset('assets/images/placeholder.jpg'),
-            'kategori' => $seniman->kategori->nama,
-            'biografi' => $seniman->biografi ?? 'Deskripsi tidak tersedia',
-            'karya' => $karya,
-        ]);
+            return response()->json([
+                'nama' => $seniman->user->name,
+                'foto' => $seniman->foto ? asset($seniman->foto) : asset('assets/images/placeholder.jpg'),
+                'kategori' => $seniman->kategori->nama,
+                'biografi' => $seniman->biografi ?? 'Deskripsi tidak tersedia',
+                'karya' => $karya,
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Seniman tidak ditemukan',
+                'message' => $e->getMessage()
+            ], 404);
+        }
     }
 }

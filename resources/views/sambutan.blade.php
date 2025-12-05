@@ -17,7 +17,7 @@
             <p class="hero-subtitle">Portal Karya Seniman Budaya Sumbawa</p>
         </div>
         <div class="hero-image">
-            <img src="{{ url('storage/' . $sambutan->hero_image) }}" alt="Portal Karya Seniman">
+            <img src="{{ asset($sambutan->hero_image) }}" alt="Portal Karya Seniman">
         </div>
     </div>
 </section>
@@ -68,7 +68,7 @@
         <div class="visi-misi-grid">
             <div class="visi-misi-card">
                 <div class="card-image">
-                    <img src="{{ url('storage/' . $sambutan->visi_image) }}" alt="Visi">
+                    <img src="{{ asset($sambutan->visi_image) }}" alt="Visi">
                 </div>
                 <div class="card-icon">
                     <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -81,7 +81,7 @@
             </div>
             <div class="visi-misi-card">
                 <div class="card-image">
-                    <img src="{{ url('storage/' . $sambutan->misi_image) }}" alt="Misi">
+                    <img src="{{ asset($sambutan->misi_image) }}" alt="Misi">
                 </div>
                 <div class="card-icon">
                     <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -109,7 +109,7 @@
         <div class="objectives-grid">
             <div class="objective-item">
                 <div class="objective-image">
-                    <img src="{{ url('storage/' . $sambutan->obj1_image) }}" alt="{{ $sambutan->obj1_title }}">
+                    <img src="{{ asset($sambutan->obj1_image) }}" alt="{{ $sambutan->obj1_title }}">
                 </div>
                 <div class="objective-number">01</div>
                 <h3>{{ $sambutan->obj1_title }}</h3>
@@ -117,7 +117,7 @@
             </div>
             <div class="objective-item">
                 <div class="objective-image">
-                    <img src="{{ url('storage/' . $sambutan->obj2_image) }}" alt="{{ $sambutan->obj2_title }}">
+                    <img src="{{ asset($sambutan->obj2_image) }}" alt="{{ $sambutan->obj2_title }}">
                 </div>
                 <div class="objective-number">02</div>
                 <h3>{{ $sambutan->obj2_title }}</h3>
@@ -125,7 +125,7 @@
             </div>
             <div class="objective-item">
                 <div class="objective-image">
-                    <img src="{{ url('storage/' . $sambutan->obj3_image) }}" alt="{{ $sambutan->obj3_title }}">
+                    <img src="{{ asset($sambutan->obj3_image) }}" alt="{{ $sambutan->obj3_title }}">
                 </div>
                 <div class="objective-number">03</div>
                 <h3>{{ $sambutan->obj3_title }}</h3>
@@ -133,7 +133,7 @@
             </div>
             <div class="objective-item">
                 <div class="objective-image">
-                    <img src="{{ url('storage/' . $sambutan->obj4_image) }}" alt="{{ $sambutan->obj4_title }}">
+                    <img src="{{ asset($sambutan->obj4_image) }}" alt="{{ $sambutan->obj4_title }}">
                 </div>
                 <div class="objective-number">04</div>
                 <h3>{{ $sambutan->obj4_title }}</h3>
