@@ -1,582 +1,356 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
 @section('content')
-<div class="admin-container">
-    <div class="admin-header">
-        <h1><i class="ri-edit-2-line"></i> Edit Kata Sambutan</h1>
-        <p class="subtitle">Kelola konten halaman Kata Sambutan dengan tampilan yang kreatif</p>
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">Manajemen Kata Sambutan</h1>
+            </div>
+        </div>
     </div>
-
-    <!-- Alert Messages -->
-    @if ($errors->any())
-        <div class="alert alert-danger" style="margin-bottom: 20px;">
-            <i class="fas fa-exclamation-circle"></i>
-            <ul style="margin: 0; padding-left: 20px;">
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
-
-    @if (session('success'))
-        <div class="alert alert-success" style="margin-bottom: 20px;">
-            <i class="fas fa-check-circle"></i>
-            <p style="margin: 0;">{{ session('success') }}</p>
-        </div>
-    @endif
-
-    <form class="edit-sambutan-form" method="POST" action="{{ route('sambutan.update') }}" enctype="multipart/form-data">
-        @csrf
-
-        <!-- Bagian Foto Hero -->
-        <div class="form-section hero-section">
-            <div class="section-header">
-                <h2><i class="ri-image-add-line"></i> Foto Hero Section</h2>
-                <span class="section-badge">Gambar Utama</span>
-            </div>
-            <div class="form-group">
-                <label>Foto Saat Ini</label>
-                <div class="current-image preview-large">
-                    <img src="{{ asset($sambutan->hero_image) }}" alt="Hero Sambutan">
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="hero_image">Ganti Foto Hero</label>
-                <div class="file-input-wrapper">
-                    <input type="file" id="hero_image" name="hero_image" accept="image/*">
-                    <span class="file-label">Klik untuk pilih foto baru</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- Bagian Visi -->
-        <div class="form-section visi-section">
-            <div class="section-header">
-                <h2><i class="ri-eye-line"></i> Visi</h2>
-                <span class="section-badge">Visi Kami</span>
-            </div>
-            <div class="two-column-layout">
-                <div class="column-left">
-                    <div class="form-group">
-                        <label for="foto_visi">Foto Visi</label>
-                        <div class="current-image preview-medium">
-                            <img src="{{ asset($sambutan->visi_image) }}" alt="Visi">
-                        </div>
-                        <div class="file-input-wrapper" style="margin-top: 15px;">
-                            <input type="file" id="foto_visi" name="visi_image" accept="image/*">
-                            <span class="file-label">Ganti foto</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="column-right">
-                    <div class="form-group">
-                        <label for="teks_visi">Teks Visi</label>
-                        <textarea id="teks_visi" name="visi_text" rows="6" class="form-control" placeholder="Masukkan teks visi">{{ $sambutan->visi_text }}</textarea>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Bagian Misi -->
-        <div class="form-section misi-section">
-            <div class="section-header">
-                <h2><i class="ri-rocket-2-line"></i> Misi</h2>
-                <span class="section-badge">Tujuan Kami</span>
-            </div>
-            <div class="two-column-layout">
-                <div class="column-left">
-                    <div class="form-group">
-                        <label for="foto_misi">Foto Misi</label>
-                        <div class="current-image preview-medium">
-                            <img src="{{ asset($sambutan->misi_image) }}" alt="Misi">
-                        </div>
-                        <div class="file-input-wrapper" style="margin-top: 15px;">
-                            <input type="file" id="foto_misi" name="misi_image" accept="image/*">
-                            <span class="file-label">Ganti foto</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="column-right">
-                    <div class="form-group">
-                        <label for="teks_misi">Teks Misi (pisahkan dengan line break untuk setiap poin)</label>
-                        <textarea id="teks_misi" name="misi_text" rows="6" class="form-control" placeholder="Masukkan teks misi">{{ $sambutan->misi_text }}</textarea>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Bagian Objectives -->
-        <div class="form-section objectives-section">
-            <div class="section-header">
-                <h2><i class="ri-lightbulb-line"></i> Objectives (Tujuan)</h2>
-                <span class="section-badge">4 Pilar Utama</span>
-            </div>
-
-            <!-- Objective 1 -->
-            <div class="objective-edit-item">
-                <div class="objective-header">
-                    <h3>Objective 1: {{ $sambutan->obj1_title }}</h3>
-                </div>
-                <div class="objective-layout">
-                    <div class="objective-image">
-                        <label>Foto</label>
-                        <div class="current-image preview-small">
-                            <img src="{{ asset($sambutan->obj1_image) }}" alt="Objective 1">
-                        </div>
-                        <div class="file-input-wrapper">
-                            <input type="file" id="obj1_foto" name="obj1_image" accept="image/*">
-                            <span class="file-label">Ganti foto</span>
-                        </div>
-                    </div>
-                    <div class="objective-content">
-                        <div class="form-group">
-                            <label for="obj1_title">Judul</label>
-                            <input type="text" id="obj1_title" name="obj1_title" class="form-control" placeholder="Judul objective" value="{{ $sambutan->obj1_title }}">
-                        </div>
-                        <div class="form-group">
-                            <label for="obj1_deskripsi">Deskripsi</label>
-                            <textarea id="obj1_deskripsi" name="obj1_deskripsi" rows="4" class="form-control" placeholder="Deskripsi objective">{{ $sambutan->obj1_deskripsi }}</textarea>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Objective 2 -->
-            <div class="objective-edit-item">
-                <div class="objective-header">
-                    <h3>Objective 2: {{ $sambutan->obj2_title }}</h3>
-                </div>
-                <div class="objective-layout">
-                    <div class="objective-image">
-                        <label>Foto</label>
-                        <div class="current-image preview-small">
-                            <img src="{{ asset($sambutan->obj2_image) }}" alt="Objective 2">
-                        </div>
-                        <div class="file-input-wrapper">
-                            <input type="file" id="obj2_foto" name="obj2_image" accept="image/*">
-                            <span class="file-label">Ganti foto</span>
-                        </div>
-                    </div>
-                    <div class="objective-content">
-                        <div class="form-group">
-                            <label for="obj2_title">Judul</label>
-                            <input type="text" id="obj2_title" name="obj2_title" class="form-control" placeholder="Judul objective" value="{{ $sambutan->obj2_title }}">
-                        </div>
-                        <div class="form-group">
-                            <label for="obj2_deskripsi">Deskripsi</label>
-                            <textarea id="obj2_deskripsi" name="obj2_deskripsi" rows="4" class="form-control" placeholder="Deskripsi objective">{{ $sambutan->obj2_deskripsi }}</textarea>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Objective 3 -->
-            <div class="objective-edit-item">
-                <div class="objective-header">
-                    <h3>Objective 3: {{ $sambutan->obj3_title }}</h3>
-                </div>
-                <div class="objective-layout">
-                    <div class="objective-image">
-                        <label>Foto</label>
-                        <div class="current-image preview-small">
-                            <img src="{{ asset($sambutan->obj3_image) }}" alt="Objective 3">
-                        </div>
-                        <div class="file-input-wrapper">
-                            <input type="file" id="obj3_foto" name="obj3_image" accept="image/*">
-                            <span class="file-label">Ganti foto</span>
-                        </div>
-                    </div>
-                    <div class="objective-content">
-                        <div class="form-group">
-                            <label for="obj3_title">Judul</label>
-                            <input type="text" id="obj3_title" name="obj3_title" class="form-control" placeholder="Judul objective" value="{{ $sambutan->obj3_title }}">
-                        </div>
-                        <div class="form-group">
-                            <label for="obj3_deskripsi">Deskripsi</label>
-                            <textarea id="obj3_deskripsi" name="obj3_deskripsi" rows="4" class="form-control" placeholder="Deskripsi objective">{{ $sambutan->obj3_deskripsi }}</textarea>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Objective 4 -->
-            <div class="objective-edit-item">
-                <div class="objective-header">
-                    <h3>Objective 4: {{ $sambutan->obj4_title }}</h3>
-                </div>
-                <div class="objective-layout">
-                    <div class="objective-image">
-                        <label>Foto</label>
-                        <div class="current-image preview-small">
-                            <img src="{{ asset($sambutan->obj4_image) }}" alt="Objective 4">
-                        </div>
-                        <div class="file-input-wrapper">
-                            <input type="file" id="obj4_foto" name="obj4_image" accept="image/*">
-                            <span class="file-label">Ganti foto</span>
-                        </div>
-                    </div>
-                    <div class="objective-content">
-                        <div class="form-group">
-                            <label for="obj4_title">Judul</label>
-                            <input type="text" id="obj4_title" name="obj4_title" class="form-control" placeholder="Judul objective" value="{{ $sambutan->obj4_title }}">
-                        </div>
-                        <div class="form-group">
-                            <label for="obj4_deskripsi">Deskripsi</label>
-                            <textarea id="obj4_deskripsi" name="obj4_deskripsi" rows="4" class="form-control" placeholder="Deskripsi objective">{{ $sambutan->obj4_deskripsi }}</textarea>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Tombol Submit -->
-        <div class="form-actions">
-            <button type="submit" class="btn btn-primary btn-save"><i class="ri-save-line"></i> Simpan Perubahan</button>
-            <button type="reset" class="btn btn-secondary btn-reset"><i class="ri-refresh-line"></i> Reset Form</button>
-        </div>
-    </form>
 </div>
-@endsection
 
-@push('scripts')
-<script>
-    // Animasi centang saat gambar dipilih
-    document.addEventListener('DOMContentLoaded', function() {
-        const fileInputs = document.querySelectorAll('input[type="file"]');
-        
-        fileInputs.forEach(input => {
-            input.addEventListener('change', function() {
-                const wrapper = this.closest('.file-input-wrapper');
-                const label = wrapper.querySelector('.file-label');
-                const fileName = this.files[0]?.name || '';
-                
-                if (fileName) {
-                    // Tambahkan kelas untuk animasi
-                    wrapper.classList.add('file-selected');
-                    
-                    // Update label dengan nama file dan centang
-                    label.innerHTML = `<i class="ri-check-line"></i> ${fileName}`;
-                    
-                    // Auto remove effect setelah 3 detik jika user tidak submit
-                    setTimeout(() => {
-                        if (wrapper.classList.contains('file-selected')) {
-                            label.innerHTML = `<i class="ri-check-line" style="color: #27ae60;"></i> Siap diunggah`;
-                        }
-                    }, 2000);
-                }
-            });
-        });
-    });
-</script>
-@endpush
+<div class="content">
+    <div class="container-fluid">
+        <!-- Alert Messages -->
+        @if ($errors->any())
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="alert-heading"><i class="fas fa-exclamation-circle"></i> Error!</h4>
+                <ul class="mb-0">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
 
-@push('styles')
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@4.1.0/fonts/remixicon.css">
-<link rel="stylesheet" href="{{ asset('css/admin-sambutan.css') }}">
+        @if (session('success'))
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <i class="fas fa-check-circle"></i> {{ session('success') }}
+            </div>
+        @endif
+
+        <form method="POST" action="{{ route('sambutan.update') }}" enctype="multipart/form-data">
+            @csrf
+
+            <!-- Hero Image Section -->
+            <div class="card mb-3">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="card-title m-0"><i class="fas fa-image"></i> Foto Hero Section</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="hero_image" class="font-weight-bold">Ganti Foto Hero</label>
+                            <div class="text-center mb-3">
+                                <img src="{{ asset($sambutan->hero_image) }}" alt="Hero" class="img-fluid rounded" style="max-height: 300px; object-fit: cover; width: 100%;">
+                            </div>
+                            <button type="button" class="btn btn-primary btn-block mb-2" onclick="document.getElementById('hero_image').click()">
+                                <i class="fas fa-cloud-upload-alt"></i> Pilih Gambar
+                            </button>
+                            <div class="custom-file-input" style="display:none;">
+                                <input type="file" class="form-control-file" id="hero_image" name="hero_image" accept="image/*" onchange="previewFile(this, 'heroPreview')">
+                            </div>
+                            <div id="heroPreview" class="mt-3"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Visi Section -->
+            <div class="card mb-3">
+                <div class="card-header bg-info text-white">
+                    <h3 class="card-title m-0"><i class="fas fa-eye"></i> Visi</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="visi_image" class="font-weight-bold">Foto Visi</label>
+                            <div class="text-center mb-3">
+                                <img src="{{ asset($sambutan->visi_image) }}" alt="Visi" class="img-fluid rounded" style="max-height: 250px; object-fit: cover; width: 100%;">
+                            </div>
+                            <button type="button" class="btn btn-info btn-block mb-2" onclick="document.getElementById('visi_image').click()">
+                                <i class="fas fa-cloud-upload-alt"></i> Pilih Gambar
+                            </button>
+                            <div class="custom-file-input" style="display:none;">
+                                <input type="file" class="form-control-file" id="visi_image" name="visi_image" accept="image/*" onchange="previewFile(this, 'visiPreview')">
+                            </div>
+                            <div id="visiPreview" class="mt-3"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="visi_text" class="font-weight-bold">Teks Visi</label>
+                            <textarea id="visi_text" name="visi_text" rows="6" class="form-control" placeholder="Masukkan teks visi">{{ $sambutan->visi_text }}</textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Misi Section -->
+            <div class="card mb-3">
+                <div class="card-header bg-success text-white">
+                    <h3 class="card-title m-0"><i class="fas fa-bullseye"></i> Misi</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="misi_image" class="font-weight-bold">Foto Misi</label>
+                            <div class="text-center mb-3">
+                                <img src="{{ asset($sambutan->misi_image) }}" alt="Misi" class="img-fluid rounded" style="max-height: 250px; object-fit: cover; width: 100%;">
+                            </div>
+                            <button type="button" class="btn btn-success btn-block mb-2" onclick="document.getElementById('misi_image').click()">
+                                <i class="fas fa-cloud-upload-alt"></i> Pilih Gambar
+                            </button>
+                            <div class="custom-file-input" style="display:none;">
+                                <input type="file" class="form-control-file" id="misi_image" name="misi_image" accept="image/*" onchange="previewFile(this, 'misiPreview')">
+                            </div>
+                            <div id="misiPreview" class="mt-3"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="misi_text" class="font-weight-bold">Teks Misi</label>
+                            <textarea id="misi_text" name="misi_text" rows="6" class="form-control" placeholder="Masukkan teks misi">{{ $sambutan->misi_text }}</textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Objectives Section -->
+            <div class="card mb-3">
+                <div class="card-header bg-warning">
+                    <h3 class="card-title m-0"><i class="fas fa-lightbulb"></i> Objectives (Tujuan)</h3>
+                </div>
+                <div class="card-body">
+                    @php
+                        $borderColors = ['primary', 'info', 'success', 'danger'];
+                    @endphp
+                    
+                    <!-- Objective 1 -->
+                    <div class="card border-left-primary mb-3">
+                        <div class="card-header">
+                            <h5 class="m-0">Objective 1: <strong id="obj1_title_display">{{ $sambutan->obj1_title }}</strong></h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label for="obj1_image" class="font-weight-bold">Foto</label>
+                                    <div class="text-center mb-3">
+                                        <img src="{{ asset($sambutan->obj1_image) }}" alt="Objective 1" class="img-fluid rounded" style="max-height: 200px; object-fit: cover; width: 100%;">
+                                    </div>
+                                    <button type="button" class="btn btn-primary btn-block mb-2" onclick="document.getElementById('obj1_image').click()">
+                                        <i class="fas fa-cloud-upload-alt"></i> Pilih Gambar
+                                    </button>
+                                    <div class="custom-file-input" style="display:none;">
+                                        <input type="file" class="form-control-file" id="obj1_image" name="obj1_image" accept="image/*" onchange="previewFile(this, 'obj1Preview')">
+                                    </div>
+                                    <div id="obj1Preview" class="mt-3"></div>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="form-group">
+                                        <label for="obj1_title" class="font-weight-bold">Judul</label>
+                                        <input type="text" id="obj1_title" name="obj1_title" class="form-control" placeholder="Judul objective" value="{{ $sambutan->obj1_title }}" onchange="updateObjTitle(1)">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="obj1_deskripsi" class="font-weight-bold">Deskripsi</label>
+                                        <textarea id="obj1_deskripsi" name="obj1_deskripsi" rows="4" class="form-control" placeholder="Deskripsi objective">{{ $sambutan->obj1_deskripsi }}</textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Objective 2 -->
+                    <div class="card border-left-info mb-3">
+                        <div class="card-header">
+                            <h5 class="m-0">Objective 2: <strong id="obj2_title_display">{{ $sambutan->obj2_title }}</strong></h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label for="obj2_image" class="font-weight-bold">Foto</label>
+                                    <div class="text-center mb-3">
+                                        <img src="{{ asset($sambutan->obj2_image) }}" alt="Objective 2" class="img-fluid rounded" style="max-height: 200px; object-fit: cover; width: 100%;">
+                                    </div>
+                                    <button type="button" class="btn btn-info btn-block mb-2" onclick="document.getElementById('obj2_image').click()">
+                                        <i class="fas fa-cloud-upload-alt"></i> Pilih Gambar
+                                    </button>
+                                    <div class="custom-file-input" style="display:none;">
+                                        <input type="file" class="form-control-file" id="obj2_image" name="obj2_image" accept="image/*" onchange="previewFile(this, 'obj2Preview')">
+                                    </div>
+                                    <div id="obj2Preview" class="mt-3"></div>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="form-group">
+                                        <label for="obj2_title" class="font-weight-bold">Judul</label>
+                                        <input type="text" id="obj2_title" name="obj2_title" class="form-control" placeholder="Judul objective" value="{{ $sambutan->obj2_title }}" onchange="updateObjTitle(2)">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="obj2_deskripsi" class="font-weight-bold">Deskripsi</label>
+                                        <textarea id="obj2_deskripsi" name="obj2_deskripsi" rows="4" class="form-control" placeholder="Deskripsi objective">{{ $sambutan->obj2_deskripsi }}</textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Objective 3 -->
+                    <div class="card border-left-success mb-3">
+                        <div class="card-header">
+                            <h5 class="m-0">Objective 3: <strong id="obj3_title_display">{{ $sambutan->obj3_title }}</strong></h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label for="obj3_image" class="font-weight-bold">Foto</label>
+                                    <div class="text-center mb-3">
+                                        <img src="{{ asset($sambutan->obj3_image) }}" alt="Objective 3" class="img-fluid rounded" style="max-height: 200px; object-fit: cover; width: 100%;">
+                                    </div>
+                                    <button type="button" class="btn btn-success btn-block mb-2" onclick="document.getElementById('obj3_image').click()">
+                                        <i class="fas fa-cloud-upload-alt"></i> Pilih Gambar
+                                    </button>
+                                    <div class="custom-file-input" style="display:none;">
+                                        <input type="file" class="form-control-file" id="obj3_image" name="obj3_image" accept="image/*" onchange="previewFile(this, 'obj3Preview')">
+                                    </div>
+                                    <div id="obj3Preview" class="mt-3"></div>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="form-group">
+                                        <label for="obj3_title" class="font-weight-bold">Judul</label>
+                                        <input type="text" id="obj3_title" name="obj3_title" class="form-control" placeholder="Judul objective" value="{{ $sambutan->obj3_title }}" onchange="updateObjTitle(3)">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="obj3_deskripsi" class="font-weight-bold">Deskripsi</label>
+                                        <textarea id="obj3_deskripsi" name="obj3_deskripsi" rows="4" class="form-control" placeholder="Deskripsi objective">{{ $sambutan->obj3_deskripsi }}</textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Objective 4 -->
+                    <div class="card border-left-danger mb-3">
+                        <div class="card-header">
+                            <h5 class="m-0">Objective 4: <strong id="obj4_title_display">{{ $sambutan->obj4_title }}</strong></h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label for="obj4_image" class="font-weight-bold">Foto</label>
+                                    <div class="text-center mb-3">
+                                        <img src="{{ asset($sambutan->obj4_image) }}" alt="Objective 4" class="img-fluid rounded" style="max-height: 200px; object-fit: cover; width: 100%;">
+                                    </div>
+                                    <button type="button" class="btn btn-danger btn-block mb-2" onclick="document.getElementById('obj4_image').click()">
+                                        <i class="fas fa-cloud-upload-alt"></i> Pilih Gambar
+                                    </button>
+                                    <div class="custom-file-input" style="display:none;">
+                                        <input type="file" class="form-control-file" id="obj4_image" name="obj4_image" accept="image/*" onchange="previewFile(this, 'obj4Preview')">
+                                    </div>
+                                    <div id="obj4Preview" class="mt-3"></div>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="form-group">
+                                        <label for="obj4_title" class="font-weight-bold">Judul</label>
+                                        <input type="text" id="obj4_title" name="obj4_title" class="form-control" placeholder="Judul objective" value="{{ $sambutan->obj4_title }}" onchange="updateObjTitle(4)">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="obj4_deskripsi" class="font-weight-bold">Deskripsi</label>
+                                        <textarea id="obj4_deskripsi" name="obj4_deskripsi" rows="4" class="form-control" placeholder="Deskripsi objective">{{ $sambutan->obj4_deskripsi }}</textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="form-group mb-0">
+                <button type="submit" class="btn btn-primary btn-lg">
+                    <i class="fas fa-save"></i> Simpan Perubahan
+                </button>
+                <a href="{{ route('admin.dashboard') }}" class="btn btn-secondary btn-lg">
+                    <i class="fas fa-arrow-left"></i> Kembali
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
 <style>
-    /* Enhanced Creative Styling */
-    .admin-header h1 {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        font-size: 2.5em;
-        margin-bottom: 10px;
-    }
+.custom-file-input {
+    position: relative;
+    display: block;
+    margin-bottom: 1rem;
+}
 
-    .section-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom: 25px;
-        padding-bottom: 15px;
-        border-bottom: 3px solid #f0f0f0;
-    }
+.custom-file-input input[type="file"] {
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+}
 
-    .section-header h2 {
-        font-size: 1.8em;
-        color: #333;
-        margin: 0;
-    }
+.custom-file-input::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 0.25rem;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: -1;
+}
 
-    .section-badge {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        padding: 5px 15px;
-        border-radius: 20px;
-        font-size: 0.85em;
-        font-weight: 600;
-    }
+.custom-file-input:hover::before {
+    opacity: 0.1;
+}
 
-    .form-section {
-        background: white;
-        padding: 30px;
-        border-radius: 12px;
-        margin-bottom: 25px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-        border-left: 5px solid #667eea;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
+.card.border-left-primary {
+    border-left: 0.25rem solid #1e40af !important;
+}
 
-    .form-section:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(0,0,0,0.12);
-    }
+.card.border-left-info {
+    border-left: 0.25rem solid #0ea5e9 !important;
+}
 
-    .visi-section {
-        border-left-color: #20c997;
-    }
+.card.border-left-success {
+    border-left: 0.25rem solid #10b981 !important;
+}
 
-    .misi-section {
-        border-left-color: #ffc107;
-    }
-
-    .objectives-section {
-        border-left-color: #e74c3c;
-    }
-
-    .two-column-layout {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 30px;
-        align-items: start;
-    }
-
-    @media (max-width: 768px) {
-        .two-column-layout {
-            grid-template-columns: 1fr;
-        }
-    }
-
-    .preview-large {
-        max-height: 400px;
-        border-radius: 12px;
-        overflow: hidden;
-        box-shadow: 0 4px 16px rgba(0,0,0,0.15);
-    }
-
-    .preview-large img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-
-    .preview-medium {
-        max-height: 300px;
-        border-radius: 12px;
-        overflow: hidden;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.12);
-    }
-
-    .preview-medium img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-
-    .preview-small {
-        max-height: 180px;
-        border-radius: 10px;
-        overflow: hidden;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
-
-    .preview-small img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-
-    .objective-edit-item {
-        background: #f9f9f9;
-        padding: 25px;
-        border-radius: 10px;
-        margin-bottom: 20px;
-        border: 2px solid #e0e0e0;
-        transition: all 0.3s ease;
-    }
-
-    .objective-edit-item:hover {
-        background: #fff;
-        border-color: #667eea;
-        box-shadow: 0 2px 8px rgba(102, 126, 234, 0.15);
-    }
-
-    .objective-header {
-        margin-bottom: 20px;
-        padding-bottom: 15px;
-        border-bottom: 2px solid #e0e0e0;
-    }
-
-    .objective-header h3 {
-        margin: 0;
-        color: #667eea;
-        font-size: 1.1em;
-    }
-
-    .objective-layout {
-        display: grid;
-        grid-template-columns: 200px 1fr;
-        gap: 25px;
-        align-items: start;
-    }
-
-    @media (max-width: 768px) {
-        .objective-layout {
-            grid-template-columns: 1fr;
-        }
-    }
-
-    .form-actions {
-        display: flex;
-        gap: 15px;
-        justify-content: center;
-        margin-top: 40px;
-        padding-top: 30px;
-        border-top: 3px solid #f0f0f0;
-    }
-
-    .btn-save, .btn-reset {
-        padding: 12px 30px;
-        font-size: 1em;
-        border-radius: 8px;
-        font-weight: 600;
-        transition: all 0.3s ease;
-    }
-
-    .btn-save {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        border: none;
-        color: white;
-    }
-
-    .btn-save:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
-    }
-
-    .btn-reset {
-        background: #e0e0e0;
-        border: none;
-        color: #666;
-    }
-
-    .btn-reset:hover {
-        background: #d0d0d0;
-        transform: translateY(-3px);
-    }
-
-    /* Remix Icon Styling */
-    .section-header h2 i {
-        margin-right: 10px;
-        font-size: 1.3em;
-    }
-
-    .admin-header h1 i {
-        margin-right: 8px;
-        font-size: 1.2em;
-    }
-
-    .btn-save i,
-    .btn-reset i {
-        margin-right: 8px;
-        font-size: 1.1em;
-    }
-
-    /* Alert Styling */
-    .alert {
-        padding: 15px 20px;
-        border-radius: 8px;
-        border-left: 4px solid;
-    }
-
-    .alert-danger {
-        background-color: #fee;
-        border-left-color: #e74c3c;
-        color: #c0392b;
-    }
-
-    .alert-danger i {
-        margin-right: 10px;
-    }
-
-    .alert-success {
-        background-color: #efe;
-        border-left-color: #27ae60;
-        color: #229954;
-    }
-
-    .alert-success i {
-        margin-right: 10px;
-    }
-
-    /* File Input Animation */
-    .file-input-wrapper {
-        position: relative;
-        overflow: hidden;
-    }
-
-    .file-label {
-        display: inline-block;
-        padding: 12px 20px;
-        background: #f8f9fa;
-        border: 2px dashed #667eea;
-        border-radius: 8px;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        font-weight: 500;
-        color: #666;
-        width: 100%;
-        text-align: center;
-    }
-
-    .file-input-wrapper:hover .file-label {
-        background: #f0f1ff;
-        border-color: #764ba2;
-        color: #764ba2;
-    }
-
-    .file-input-wrapper.file-selected .file-label {
-        background: #f0fff4;
-        border-color: #27ae60;
-        border-style: solid;
-        color: #27ae60;
-        animation: slideIn 0.4s ease-out;
-    }
-
-    .file-label i {
-        margin-right: 8px;
-        font-size: 1.1em;
-    }
-
-    @keyframes slideIn {
-        from {
-            opacity: 0;
-            transform: translateY(-10px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-    @keyframes checkmark {
-        0% {
-            transform: scale(0) rotate(-45deg);
-            opacity: 0;
-        }
-        50% {
-            transform: scale(1.2) rotate(0deg);
-        }
-        100% {
-            transform: scale(1) rotate(0deg);
-            opacity: 1;
-        }
-    }
-
-    .file-label i.ri-check-line {
-        animation: checkmark 0.5s ease-out;
-    }
+.card.border-left-danger {
+    border-left: 0.25rem solid #ef4444 !important;
+}
 </style>
-@endpush
+
+<script>
+function previewFile(input, previewId) {
+    const file = input.files[0];
+    const preview = document.getElementById(previewId);
+    
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            preview.innerHTML = '<img src="' + e.target.result + '" class="img-fluid rounded" style="max-height: 200px; object-fit: cover; width: 100%;">';
+        };
+        reader.readAsDataURL(file);
+    }
+}
+
+function updateObjTitle(num) {
+    const titleInput = document.getElementById('obj' + num + '_title');
+    const titleDisplay = document.getElementById('obj' + num + '_title_display');
+    titleDisplay.textContent = titleInput.value || 'Objective ' + num;
+}
+</script>
+@endsection

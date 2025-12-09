@@ -36,6 +36,7 @@ class SliderController extends Controller
             $sliderDir = public_path('assets/slider');
             if (!is_dir($sliderDir)) {
                 mkdir($sliderDir, 0755, true);
+                Log::info('Slider directory created at: ' . $sliderDir);
             }
             
             // Get file info BEFORE moving (temp file will be deleted after)
@@ -43,11 +44,22 @@ class SliderController extends Controller
             $mimeType = $request->file('foto')->getClientMimeType();
             $originalName = $request->file('foto')->getClientOriginalName();
             
+            Log::info('Slider Upload Started', [
+                'original_name' => $originalName,
+                'mime_type' => $mimeType,
+                'file_size' => $fileSize,
+                'slider_dir' => $sliderDir,
+                'dir_exists' => is_dir($sliderDir),
+                'dir_writable' => is_writable($sliderDir)
+            ]);
+            
             // Generate unique filename: slider-{timestamp}-{random}.{ext}
             $timestamp = time();
             $random = substr(uniqid(), -8);
             $extension = strtolower($request->file('foto')->getClientOriginalExtension());
             $filename = "slider-{$timestamp}-{$random}.{$extension}";
+            
+            Log::info('Generated filename: ' . $filename);
             
             // Move file to public/assets/slider
             $moved = $request->file('foto')->move($sliderDir, $filename);
@@ -56,14 +68,23 @@ class SliderController extends Controller
                 throw new \Exception('Gagal memindahkan file ke direktori slider');
             }
             
+            // Verify file exists after move
+            $fullPath = $sliderDir . DIRECTORY_SEPARATOR . $filename;
+            if (!file_exists($fullPath)) {
+                throw new \Exception('File tidak ditemukan setelah upload di: ' . $fullPath);
+            }
+            
+            Log::info('File successfully moved to: ' . $fullPath);
+            
             // Get next order
             $nextOrder = (SliderImage::max('order') ?? -1) + 1;
             
             // Create record - store path as assets/slider/filename
+            $filePath = 'assets/slider/' . $filename;
             $slider = SliderImage::create([
                 'filename' => $filename,
                 'original_name' => $originalName,
-                'file_path' => 'assets/slider/' . $filename,
+                'file_path' => $filePath,
                 'mime_type' => $mimeType,
                 'file_size' => $fileSize,
                 'description' => null,
@@ -74,6 +95,12 @@ class SliderController extends Controller
             if (!$slider) {
                 throw new \Exception('Gagal menyimpan data slider ke database');
             }
+
+            Log::info('Slider record created', [
+                'id' => $slider->id,
+                'file_path' => $slider->file_path,
+                'full_url' => asset($slider->file_path)
+            ]);
 
             // For AJAX requests, return JSON response
             if ($request->wantsJson()) {

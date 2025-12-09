@@ -78,6 +78,65 @@ html, body {
     background-color: var(--white);
 }
 
+/* HEADER USER SECTION */
+.header-user-section {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.btn-login {
+    display: inline-block;
+    padding: 0.625rem 1.5rem;
+    background-color: var(--primary-blue);
+    color: var(--white);
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-login:hover {
+    background-color: var(--primary-blue-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(30, 136, 229, 0.3);
+    color: var(--white);
+    text-decoration: none;
+}
+
+.user-menu {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.user-name {
+    font-size: 0.9rem;
+    color: var(--text-dark);
+    font-weight: 500;
+}
+
+.btn-logout {
+    padding: 0.625rem 1.5rem;
+    background-color: #f44336;
+    color: var(--white);
+    border: none;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-logout:hover {
+    background-color: #d32f2f;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(244, 67, 54, 0.3);
+}
+
 /* LAYOUT WRAPPER */
 .container-main {
     display: flex;
@@ -168,7 +227,10 @@ html, body {
 
 /* SLIDER SECTION */
 .slider-section {
-    margin-bottom: 3rem;
+    margin-bottom: 2rem;
+    max-width: 90%;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .slider-container {
@@ -183,7 +245,7 @@ html, body {
 .slider-wrapper {
     position: relative;
     width: 100%;
-    padding-bottom: 56.25%; /* 16:9 aspect ratio */
+    padding-bottom: 45%; /* Reduced from 56.25% (16:9) to 45% for more compact display */
     overflow: hidden;
 }
 

@@ -84,6 +84,13 @@ Route::middleware(['auth', 'admin'])->group(function () {
 // Seniman Dashboard
 Route::middleware(['auth', 'seniman'])->group(function () {
     Route::get('/seniman/dashboard', [SenimanDashboardController::class, 'index'])->name('seniman.dashboard');
+    Route::get('/seniman/karya', [SenimanDashboardController::class, 'karya'])->name('seniman.karya');
+    Route::get('/seniman/upload', [SenimanDashboardController::class, 'upload'])->name('seniman.upload');
+    Route::get('/seniman/status', [SenimanDashboardController::class, 'status'])->name('seniman.status');
+    Route::get('/seniman/accepted', [SenimanDashboardController::class, 'accepted'])->name('seniman.accepted');
+    Route::get('/seniman/profile', [SenimanDashboardController::class, 'profile'])->name('seniman.profile');
+    Route::put('/seniman/profile', [SenimanDashboardController::class, 'updateProfile'])->name('seniman.profile.update');
+    Route::get('/seniman/settings', [SenimanDashboardController::class, 'settings'])->name('seniman.settings');
     Route::post('/seniman/karya', [SenimanDashboardController::class, 'store'])->name('seniman.karya.store');
     Route::get('/seniman/karya/{karyaSeni}', [SenimanDashboardController::class, 'getKarya'])->name('seniman.karya.get');
     Route::delete('/seniman/karya/{karyaSeni}', [SenimanDashboardController::class, 'deleteKarya'])->name('seniman.karya.delete');

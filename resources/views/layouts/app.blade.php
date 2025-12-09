@@ -17,6 +17,19 @@
         <header class="header">
             <div class="header-content">
                 <h1 class="header-title">Aplikasi Portal Karya Seniman Budaya Sumbawa</h1>
+                <div class="header-user-section">
+                    @if(Auth::check())
+                        <div class="user-menu">
+                            <span class="user-name">{{ Auth::user()->name }}</span>
+                            <form action="{{ route('logout') }}" method="POST" style="display: inline;">
+                                @csrf
+                                <button type="submit" class="btn-logout">Logout</button>
+                            </form>
+                        </div>
+                    @else
+                        <a href="{{ route('login') }}" class="btn-login">Login</a>
+                    @endif
+                </div>
             </div>
         </header>
 

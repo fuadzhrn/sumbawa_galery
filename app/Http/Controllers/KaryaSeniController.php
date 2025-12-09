@@ -23,7 +23,30 @@ class KaryaSeniController extends Controller
      */
     public function show(KaryaSeni $karyaSeni)
     {
-        return response()->json($karyaSeni->load(['user', 'kategori']));
+        $karyaSeni->load(['user', 'kategori']);
+        
+        return response()->json([
+            'id' => $karyaSeni->id,
+            'judul' => $karyaSeni->judul,
+            'deskripsi' => $karyaSeni->deskripsi,
+            'media_type' => $karyaSeni->media_type,
+            'media_path' => $karyaSeni->media_path,
+            'thumbnail' => $karyaSeni->thumbnail ? asset($karyaSeni->thumbnail) : null,
+            'status' => $karyaSeni->status,
+            'alasan_penolakan' => $karyaSeni->alasan_penolakan,
+            'views' => $karyaSeni->views,
+            'likes' => $karyaSeni->likes,
+            'created_at' => $karyaSeni->created_at,
+            'user' => [
+                'id' => $karyaSeni->user->id,
+                'name' => $karyaSeni->user->name,
+                'email' => $karyaSeni->user->email,
+            ],
+            'kategori' => [
+                'id' => $karyaSeni->kategori->id,
+                'nama' => $karyaSeni->kategori->nama,
+            ],
+        ]);
     }
 
     /**

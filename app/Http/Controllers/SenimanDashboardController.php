@@ -21,16 +21,100 @@ class SenimanDashboardController extends Controller
         
         // Calculate stats
         $totalKarya = $user->karyaSeni()->count();
-        $totalViews = $user->karyaSeni()->sum('views') ?? 0;
-        $totalLikes = $user->karyaSeni()->sum('likes') ?? 0;
+        $totalPending = $user->karyaSeni()->where('status', 'pending')->count();
+        $totalApproved = $user->karyaSeni()->where('status', 'approved')->count();
+        $totalRejected = $user->karyaSeni()->where('status', 'rejected')->count();
 
         return view('seniman.dashboard', [
             'karyaSeni' => $karyaSeni,
             'kategoris' => $kategoris,
             'totalKarya' => $totalKarya,
+            'totalPending' => $totalPending,
+            'totalApproved' => $totalApproved,
+            'totalRejected' => $totalRejected,
+        ]);
+    }
+
+    /**
+     * Show upload form
+     */
+    public function upload()
+    {
+        $kategoris = Kategori::all();
+        return view('seniman.upload', [
+            'kategoris' => $kategoris,
+        ]);
+    }
+
+    /**
+     * Show status page
+     */
+    public function status()
+    {
+        $user = Auth::user();
+        // Get only approved karya
+        $karyaSeni = $user->karyaSeni()
+            ->where('status', 'approved')
+            ->orderBy('updated_at', 'desc')
+            ->paginate(10);
+        
+        return view('seniman.status', [
+            'karyaSeni' => $karyaSeni,
+        ]);
+    }
+
+    /**
+     * Show accepted works
+     */
+    public function accepted()
+    {
+        $user = Auth::user();
+        $karyaSeni = $user->karyaSeni()->where('status', 'approved')->paginate(10);
+        
+        return view('seniman.accepted', [
+            'karyaSeni' => $karyaSeni,
+        ]);
+    }
+
+    /**
+     * Show profile page
+     */
+    public function profile()
+    {
+        $user = Auth::user();
+        $seniman = $user->seniman;
+        $totalKarya = $user->karyaSeni()->count();
+        $totalViews = $user->karyaSeni()->sum('views') ?? 0;
+        $totalLikes = $user->karyaSeni()->sum('likes') ?? 0;
+
+        return view('seniman.profile', [
+            'user' => $user,
+            'seniman' => $seniman,
+            'totalKarya' => $totalKarya,
             'totalViews' => $totalViews,
             'totalLikes' => $totalLikes,
         ]);
+    }
+
+    /**
+     * Show karya page (list all user's karya)
+     */
+    public function karya()
+    {
+        $user = Auth::user();
+        $karyaSeni = $user->karyaSeni()->paginate(10);
+
+        return view('seniman.karya-list', [
+            'karyaSeni' => $karyaSeni,
+        ]);
+    }
+
+    /**
+     * Show settings page
+     */
+    public function settings()
+    {
+        return view('seniman.settings');
     }
 
     /**
@@ -129,7 +213,31 @@ class SenimanDashboardController extends Controller
             return response()->json(['error' => 'Unauthorized'], 403);
         }
 
-        return response()->json($karyaSeni->load(['user', 'kategori']));
+        $karya = $karyaSeni->load(['user', 'kategori']);
+
+        // Build response matching admin structure
+        return response()->json([
+            'id' => $karya->id,
+            'judul' => $karya->judul,
+            'deskripsi' => $karya->deskripsi,
+            'media_type' => $karya->media_type,
+            'media_path' => $karya->media_path,
+            'thumbnail' => $karya->thumbnail ? asset($karya->thumbnail) : null,
+            'status' => $karya->status,
+            'alasan_penolakan' => $karya->alasan_penolakan,
+            'views' => $karya->views,
+            'likes' => $karya->likes,
+            'created_at' => $karya->created_at,
+            'user' => [
+                'id' => $karya->user->id,
+                'name' => $karya->user->name,
+                'email' => $karya->user->email,
+            ],
+            'kategori' => [
+                'id' => $karya->kategori->id,
+                'nama' => $karya->kategori->nama,
+            ],
+        ]);
     }
 
     /**
@@ -166,5 +274,67 @@ class SenimanDashboardController extends Controller
         $karyaSeni->delete();
 
         return redirect()->back()->with('success', 'Karya berhasil dihapus');
+    }
+
+    /**
+     * Update profile (biografi, nama, dan foto)
+     */
+    public function updateProfile(Request $request)
+    {
+        $user = Auth::user();
+        
+        // Validation
+        $validated = $request->validate([
+            'nama' => 'nullable|string|max:255',
+            'biografi' => 'nullable|string|max:1000',
+            'foto' => 'nullable|image|max:2048',
+        ], [
+            'nama.max' => 'Nama maksimal 255 karakter',
+            'biografi.max' => 'Biografi maksimal 1000 karakter',
+            'foto.image' => 'File harus berupa gambar',
+            'foto.max' => 'Ukuran gambar maksimal 2MB',
+        ]);
+
+        // Get or create seniman
+        $seniman = $user->seniman ?? new \App\Models\Seniman(['user_id' => $user->id]);
+
+        // Update nama
+        if ($request->filled('nama')) {
+            $seniman->nama = $validated['nama'];
+        }
+
+        // Update biografi
+        if ($request->filled('biografi')) {
+            $seniman->biografi = $validated['biografi'];
+        }
+
+        // Handle foto upload
+        if ($request->hasFile('foto')) {
+            // Delete old foto if exists
+            if ($seniman->foto && file_exists(public_path($seniman->foto))) {
+                unlink(public_path($seniman->foto));
+            }
+
+            // Create avatars folder if not exists
+            $avatarsDir = 'assets/avatars';
+            if (!is_dir(public_path($avatarsDir))) {
+                mkdir(public_path($avatarsDir), 0755, true);
+            }
+
+            // Generate unique filename
+            $timestamp = time();
+            $random = substr(uniqid(), -8);
+            $extension = strtolower($request->file('foto')->getClientOriginalExtension());
+            $filename = "user-{$user->id}-{$timestamp}-{$random}.{$extension}";
+
+            // Store file
+            $request->file('foto')->move(public_path($avatarsDir), $filename);
+            $seniman->foto = "$avatarsDir/$filename";
+        }
+
+        // Save seniman
+        $seniman->save();
+
+        return redirect()->back()->with('success', 'Profil berhasil diperbarui');
     }
 }

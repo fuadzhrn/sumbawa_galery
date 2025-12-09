@@ -1,140 +1,204 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
 @section('content')
-<div class="admin-container">
-    <div class="admin-header">
-        <h1>Manajemen Seniman</h1>
-        <p class="subtitle">Kelola data seniman yang terdaftar di portal</p>
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">Manajemen Seniman</h1>
+            </div>
+        </div>
     </div>
+</div>
 
-    <!-- Filter dan Search -->
-    <div class="filter-section">
-        <div class="search-box">
-            <input type="text" placeholder="Cari seniman..." class="form-control" id="searchSeniman">
-            <i class="fas fa-search"></i>
-        </div>
-        <select class="form-control" style="width: 150px;" id="filterKategori">
-            <option value="">Semua Kategori</option>
-            @foreach(\App\Models\Kategori::all() as $kategori)
-            <option value="{{ $kategori->id }}">{{ $kategori->nama }}</option>
-            @endforeach
-        </select>
-    </div>
-
-    <!-- Tabel Seniman -->
-    <div class="table-section">
-        @if($seniman->count() > 0)
-        <div class="table-responsive">
-            <table class="admin-table">
-                <thead>
-                    <tr>
-                        <th>No</th>
-                        <th>Nama Seniman</th>
-                        <th>Email</th>
-                        <th>Kategori</th>
-                        <th>Tanggal Bergabung</th>
-                        <th>Jumlah Karya</th>
-                        <th>Aksi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse($seniman as $key => $item)
-                    <tr>
-                        <td>{{ ($seniman->currentPage() - 1) * $seniman->perPage() + $key + 1 }}</td>
-                        <td>{{ $item->nama }}</td>
-                        <td>{{ $item->user->email }}</td>
-                        <td><span class="badge" style="background-color: #667eea; color: white;">{{ $item->kategori->nama }}</span></td>
-                        <td>{{ \Carbon\Carbon::parse($item->created_at)->format('d M Y') }}</td>
-                        <td class="text-center"><strong>{{ $item->jumlah_karya }}</strong></td>
-                        <td>
-                            <button type="button" class="btn-action btn-view btn-view-seniman" title="Lihat Detail" data-seniman-id="{{ $item->id }}" data-seniman-nama="{{ $item->nama }}" data-seniman-email="{{ $item->user->email }}" data-seniman-kategori="{{ $item->kategori->nama }}" data-seniman-joined="{{ \Carbon\Carbon::parse($item->created_at)->format('d M Y') }}" data-seniman-karya="{{ $item->jumlah_karya }}" data-seniman-biografi="{{ $item->biografi }}">Lihat</button>
-                            <form method="POST" action="{{ route('admin.seniman.destroy', $item->id) }}" style="display: inline;" onsubmit="return confirm('Apakah Anda yakin ingin menghapus seniman ini?');">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn-action btn-danger" title="Hapus">Hapus</button>
-                            </form>
-                        </td>
-                    </tr>
-                    @empty
-                    @endforelse
-                </tbody>
-            </table>
+<div class="content">
+    <div class="container-fluid">
+        <!-- Filter dan Search -->
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Cari seniman..." id="searchSeniman">
+                    <div class="input-group-append">
+                        <span class="input-group-text"><i class="fas fa-search"></i></span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <select class="form-control" id="filterKategori">
+                    <option value="">Semua Kategori</option>
+                    @foreach(\App\Models\Kategori::all() as $kategori)
+                    <option value="{{ $kategori->id }}">{{ $kategori->nama }}</option>
+                    @endforeach
+                </select>
+            </div>
         </div>
 
-        <!-- Pagination -->
-        @if($seniman->hasPages())
-        <div class="pagination">
-            @if($seniman->onFirstPage())
-                <button class="btn btn-sm btn-secondary" disabled>← Sebelumnya</button>
-            @else
-                <a href="{{ $seniman->previousPageUrl() }}" class="btn btn-sm btn-secondary">← Sebelumnya</a>
-            @endif
-            <span class="page-info">Halaman {{ $seniman->currentPage() }} dari {{ $seniman->lastPage() }}</span>
-            @if($seniman->hasMorePages())
-                <a href="{{ $seniman->nextPageUrl() }}" class="btn btn-sm btn-secondary">Selanjutnya →</a>
-            @else
-                <button class="btn btn-sm btn-secondary" disabled>Selanjutnya →</button>
-            @endif
+        <!-- Card Tabel Seniman -->
+        <div class="card">
+            <div class="card-header border-0">
+                <h3 class="card-title">Daftar Seniman</h3>
+                <div class="card-tools">
+                    <span class="badge badge-primary" id="totalSenimanBadge">{{ $seniman->total() }} Seniman</span>
+                </div>
+            </div>
+            <div class="card-body">
+                @if($seniman->count() > 0)
+                <div class="table-responsive">
+                    <table class="table table-hover table-striped">
+                        <thead>
+                            <tr>
+                                <th style="width: 50px;">No</th>
+                                <th>Nama Seniman</th>
+                                <th>Email</th>
+                                <th>Kategori</th>
+                                <th>Bergabung</th>
+                                <th style="width: 80px;">Karya</th>
+                                <th style="width: 100px;">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse($seniman as $key => $item)
+                            <tr>
+                                <td>{{ ($seniman->currentPage() - 1) * $seniman->perPage() + $key + 1 }}</td>
+                                <td>
+                                    <strong>{{ $item->nama }}</strong>
+                                </td>
+                                <td>{{ $item->user->email }}</td>
+                                <td>
+                                    <span class="badge badge-info">{{ $item->kategori->nama }}</span>
+                                </td>
+                                <td>{{ \Carbon\Carbon::parse($item->created_at)->format('d M Y') }}</td>
+                                <td class="text-center">
+                                    <span class="badge badge-success">{{ $item->jumlah_karya }}</span>
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-sm btn-info btn-view-seniman" data-seniman-id="{{ $item->id }}" data-seniman-nama="{{ $item->nama }}" data-seniman-email="{{ $item->user->email }}" data-seniman-kategori="{{ $item->kategori->nama }}" data-seniman-joined="{{ \Carbon\Carbon::parse($item->created_at)->format('d M Y') }}" data-seniman-karya="{{ $item->jumlah_karya }}" data-seniman-biografi="{{ $item->biografi }}">
+                                        <i class="fas fa-eye"></i> Lihat
+                                    </button>
+                                    <button type="button" class="btn btn-sm btn-danger btn-delete-seniman" data-seniman-id="{{ $item->id }}" data-seniman-nama="{{ $item->nama }}">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            @empty
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Pagination -->
+                @if($seniman->hasPages())
+                <nav>
+                    <ul class="pagination pagination-sm m-0 float-right">
+                        @if($seniman->onFirstPage())
+                            <li class="page-item disabled"><span class="page-link">← Sebelumnya</span></li>
+                        @else
+                            <li class="page-item"><a class="page-link" href="{{ $seniman->previousPageUrl() }}">← Sebelumnya</a></li>
+                        @endif
+
+                        <li class="page-item disabled">
+                            <span class="page-link">Hal {{ $seniman->currentPage() }} dari {{ $seniman->lastPage() }}</span>
+                        </li>
+
+                        @if($seniman->hasMorePages())
+                            <li class="page-item"><a class="page-link" href="{{ $seniman->nextPageUrl() }}">Selanjutnya →</a></li>
+                        @else
+                            <li class="page-item disabled"><span class="page-link">Selanjutnya →</span></li>
+                        @endif
+                    </ul>
+                </nav>
+                @endif
+                @else
+                <div class="alert alert-info alert-dismissible fade show" role="alert">
+                    <i class="fas fa-info-circle"></i> Belum ada data seniman
+                </div>
+                @endif
+            </div>
         </div>
-        @endif
-        @else
-        <div style="padding: 60px 20px; text-align: center; color: #9ca3af;">
-            <p style="font-size: 16px; margin: 0;">Belum ada data seniman</p>
-        </div>
-        @endif
     </div>
 </div>
 
 <!-- Modal Detail Seniman -->
-<div class="modal" id="detailSenimanModal">
-    <div class="modal-content modal-lg">
-        <div class="modal-header">
-            <h2>Detail Seniman</h2>
-            <button class="modal-close" data-dismiss="modal">&times;</button>
-        </div>
-        <div class="modal-body">
-            <div class="seniman-detail">
-                <div class="detail-row">
-                    <div class="detail-field">
-                        <label>Nama</label>
-                        <p id="modal-nama"></p>
+<div class="modal fade" id="detailSenimanModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-info text-white">
+                <h5 class="modal-title">Detail Seniman</h5>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="text-muted small">Nama</label>
+                        <p class="font-weight-bold" id="modal-nama"></p>
                     </div>
-                    <div class="detail-field">
-                        <label>Email</label>
-                        <p id="modal-email"></p>
-                    </div>
-                </div>
-                <div class="detail-row">
-                    <div class="detail-field">
-                        <label>Kategori</label>
-                        <p id="modal-kategori"></p>
-                    </div>
-                    <div class="detail-field">
-                        <label>Tanggal Bergabung</label>
-                        <p id="modal-joined"></p>
+                    <div class="col-md-6 mb-3">
+                        <label class="text-muted small">Email</label>
+                        <p class="font-weight-bold" id="modal-email"></p>
                     </div>
                 </div>
-                <div class="detail-row">
-                    <div class="detail-field full-width">
-                        <label>Biodata</label>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="text-muted small">Kategori</label>
+                        <p><span class="badge badge-info" id="modal-kategori"></span></p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="text-muted small">Bergabung</label>
+                        <p class="font-weight-bold" id="modal-joined"></p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 mb-3">
+                        <label class="text-muted small">Biodata</label>
                         <p id="modal-biografi"></p>
                     </div>
                 </div>
-                <div class="detail-row">
-                    <div class="detail-field">
-                        <label>Total Karya</label>
-                        <p><strong id="modal-karya"></strong></p>
+                <div class="row">
+                    <div class="col-md-12">
+                        <label class="text-muted small">Total Karya</label>
+                        <p><span class="badge badge-success badge-lg" id="modal-karya" style="font-size: 16px;"></span></p>
                     </div>
                 </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Delete Confirmation -->
+<div class="modal fade" id="deleteSenimanModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title">Hapus Seniman</h5>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Apakah Anda yakin ingin menghapus seniman <strong id="delete-nama"></strong>?</p>
+                <p class="text-danger"><i class="fas fa-exclamation-triangle"></i> Tindakan ini tidak dapat dibatalkan!</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                <form id="deleteForm" method="POST" style="display: inline;">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="btn btn-danger">Hapus</button>
+                </form>
             </div>
         </div>
     </div>
 </div>
 
 <script>
+// View Detail
 document.querySelectorAll('.btn-view-seniman').forEach(button => {
     button.addEventListener('click', function() {
-        const id = this.getAttribute('data-seniman-id');
         const nama = this.getAttribute('data-seniman-nama');
         const email = this.getAttribute('data-seniman-email');
         const kategori = this.getAttribute('data-seniman-kategori');
@@ -149,124 +213,21 @@ document.querySelectorAll('.btn-view-seniman').forEach(button => {
         document.getElementById('modal-karya').textContent = karya;
         document.getElementById('modal-biografi').textContent = biografi || 'Belum ada biodata';
 
-        document.getElementById('detailSenimanModal').style.display = 'block';
+        $('#detailSenimanModal').modal('show');
     });
 });
 
-// Close modal when clicking outside
-document.addEventListener('click', function(event) {
-    const modal = document.getElementById('detailSenimanModal');
-    if (event.target === modal) {
-        modal.style.display = 'none';
-    }
-});
-
-// Close modal when clicking close button
-document.querySelectorAll('[data-dismiss="modal"]').forEach(button => {
+// Delete
+document.querySelectorAll('.btn-delete-seniman').forEach(button => {
     button.addEventListener('click', function() {
-        document.getElementById('detailSenimanModal').style.display = 'none';
+        const id = this.getAttribute('data-seniman-id');
+        const nama = this.getAttribute('data-seniman-nama');
+
+        document.getElementById('delete-nama').textContent = nama;
+        document.getElementById('deleteForm').action = `/admin/seniman/${id}`;
+
+        $('#deleteSenimanModal').modal('show');
     });
 });
 </script>
-
-<style>
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 1000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.4);
-    overflow: auto;
-}
-
-.modal-content {
-    background-color: #fefefe;
-    margin: 5% auto;
-    padding: 0;
-    border: 1px solid #888;
-    border-radius: 8px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-    width: 500px;
-    max-height: 80vh;
-    overflow-y: auto;
-}
-
-.modal-content.modal-lg {
-    width: 600px;
-}
-
-.modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px;
-    border-bottom: 1px solid #e5e7eb;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-}
-
-.modal-header h2 {
-    margin: 0;
-    font-size: 20px;
-}
-
-.modal-close {
-    background: none;
-    border: none;
-    font-size: 28px;
-    font-weight: bold;
-    cursor: pointer;
-    color: white;
-}
-
-.modal-close:hover {
-    opacity: 0.8;
-}
-
-.modal-body {
-    padding: 20px;
-}
-
-.seniman-detail {
-    margin: 0;
-}
-
-.detail-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-    margin-bottom: 20px;
-}
-
-.detail-field {
-    flex: 1;
-}
-
-.detail-field.full-width {
-    grid-column: 1 / -1;
-}
-
-.detail-field label {
-    display: block;
-    font-weight: 600;
-    color: #667eea;
-    font-size: 13px;
-    text-transform: uppercase;
-    margin-bottom: 8px;
-}
-
-.detail-field p {
-    margin: 0;
-    color: #374151;
-    font-size: 14px;
-    line-height: 1.5;
-}
-</style>
 @endsection
-
-@push('styles')
-<link rel="stylesheet" href="{{ asset('css/admin-seniman.css') }}">
-@endpush
