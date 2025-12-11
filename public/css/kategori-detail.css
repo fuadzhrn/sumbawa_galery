@@ -453,6 +453,153 @@
     }
 }
 
+/* ============================================
+   SIDEBAR STYLES
+   ============================================ */
+.kategori-sidebar {
+    background-color: var(--white);
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    height: fit-content;
+    position: sticky;
+    top: 20px;
+}
+
+.sidebar-card {
+    padding: 1.5rem;
+}
+
+.sidebar-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--primary-blue);
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid var(--primary-blue);
+    padding-bottom: 0.75rem;
+}
+
+.seniman-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.seniman-item {
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.seniman-toggle {
+    width: 100%;
+    background-color: var(--light-gray);
+    border: none;
+    padding: 0.75rem 1rem;
+    text-align: left;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--text-dark);
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.seniman-toggle:hover {
+    background-color: #e3f2fd;
+    color: var(--primary-blue);
+}
+
+.toggle-icon {
+    font-size: 0.8rem;
+    width: 20px;
+    text-align: center;
+    transition: transform 0.3s ease;
+}
+
+.seniman-name {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.seniman-karya {
+    background-color: #f9f9f9;
+}
+
+.karya-item-sidebar {
+    padding: 0;
+}
+
+.karya-item-title {
+    font-size: 0.9rem;
+    color: var(--text-dark);
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.btn-view-karya,
+.btn-view-karya-sm {
+    background-color: var(--primary-blue);
+    color: var(--white);
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn-view-karya:hover,
+.btn-view-karya-sm:hover {
+    background-color: var(--primary-blue-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(30, 136, 229, 0.3);
+}
+
+.loading-spinner {
+    padding: 0.75rem 1rem;
+    font-size: 0.9rem;
+    color: #999;
+    text-align: center;
+}
+
+.kategori-grid-wrapper {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Tablet */
+@media (max-width: 1024px) {
+    .kategori-section {
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .kategori-sidebar {
+        width: 100% !important;
+        position: static;
+    }
+
+    .kategori-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 2rem;
+    }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    .kategori-sidebar {
+        width: 100% !important;
+    }
+
+    .page-header {
+        margin-bottom: 2rem;
+    }
+}
+
 /* Small Mobile */
 @media (max-width: 576px) {
     .kategori-grid {

@@ -103,8 +103,37 @@
                                 $kategoris = \App\Models\Kategori::all();
                             @endphp
                             @forelse($kategoris as $kategori)
-                            <li class="nav-item">
-                                <a href="/{{ $kategori->slug }}" class="nav-link @if(request()->path() === $kategori->slug) active @endif" data-page="{{ $kategori->slug }}">{{ $kategori->nama }}</a>
+                            <li class="nav-item nav-item-collapsible">
+                                <div class="nav-item-header">
+                                    <a href="/{{ $kategori->slug }}" class="nav-link @if(request()->path() === $kategori->slug) active @endif" data-page="{{ $kategori->slug }}">{{ $kategori->nama }}</a>
+                                    <button class="nav-toggle" data-toggle="kategori-{{ $kategori->id }}" aria-expanded="false">
+                                        ▼
+                                    </button>
+                                </div>
+                                
+                                <!-- Submenu: Daftar Seniman -->
+                                <ul class="nav-submenu" id="kategori-{{ $kategori->id }}">
+                                    @php
+                                        $senimans = \App\Models\KaryaSeni::where('kategori_id', $kategori->id)
+                                            ->where('status', 'approved')
+                                            ->distinct('user_id')
+                                            ->with(['user', 'user.seniman'])
+                                            ->get()
+                                            ->pluck('user')
+                                            ->unique('id');
+                                    @endphp
+                                    @forelse($senimans as $user)
+                                    @if($user->seniman)
+                                    <li class="nav-submenu-item">
+                                        <a href="/seniman/{{ $user->seniman->id }}" class="nav-sublink">{{ $user->name }}</a>
+                                    </li>
+                                    @endif
+                                    @empty
+                                    <li class="nav-submenu-item">
+                                        <span class="nav-sublink" style="color: #9ca3af; cursor: default;">Belum ada seniman</span>
+                                    </li>
+                                    @endforelse
+                                </ul>
                             </li>
                             @empty
                             <li class="nav-item">

@@ -12,7 +12,7 @@ class SenimanController extends Controller
      */
     public function index()
     {
-        $seniman = Seniman::with(['user', 'kategori'])->paginate(10);
+        $seniman = Seniman::with(['user', 'kategori'])->paginate(5);
         return view('admin.seniman', compact('seniman'));
     }
 

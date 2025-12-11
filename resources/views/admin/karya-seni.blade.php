@@ -259,8 +259,18 @@
 document.querySelectorAll('.btn-detail-modal').forEach(button => {
     button.addEventListener('click', function() {
         const karyaId = this.getAttribute('data-karya-id');
-        fetch(`/admin/karya-seni/${karyaId}`)
-            .then(response => response.json())
+        fetch(`/admin/karya-seni/${karyaId}`, {
+            headers: {
+                'Accept': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
             .then(data => {
                 document.getElementById('modal-judul').textContent = data.judul;
                 document.getElementById('modal-seniman').textContent = data.user.name;
@@ -286,11 +296,10 @@ document.querySelectorAll('.btn-detail-modal').forEach(button => {
                 document.getElementById('modal-status').innerHTML = statusBadge;
                 
                 // Set preview image
-                const baseUrl = window.location.origin + '/';
                 if (data.media_type === 'image' && data.media_path) {
-                    document.getElementById('modal-preview').src = baseUrl + data.media_path;
+                    document.getElementById('modal-preview').src = data.media_path;
                 } else if (data.thumbnail) {
-                    document.getElementById('modal-preview').src = baseUrl + data.thumbnail;
+                    document.getElementById('modal-preview').src = data.thumbnail;
                 } else {
                     document.getElementById('modal-preview').src = "{{ asset('assets/images/placeholder.jpg') }}";
                 }
@@ -299,7 +308,7 @@ document.querySelectorAll('.btn-detail-modal').forEach(button => {
             })
             .catch(error => {
                 console.error('Error fetching karya:', error);
-                alert('Gagal memuat detail karya');
+                alert('Gagal memuat detail karya: ' + error.message);
             });
     });
 });
@@ -308,15 +317,23 @@ document.querySelectorAll('.btn-detail-modal').forEach(button => {
 document.querySelectorAll('.btn-preview-modal').forEach(button => {
     button.addEventListener('click', function() {
         const karyaId = this.getAttribute('data-karya-id');
-        fetch(`/admin/karya-seni/${karyaId}`)
-            .then(response => response.json())
+        fetch(`/admin/karya-seni/${karyaId}`, {
+            headers: {
+                'Accept': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
             .then(data => {
                 let content = '';
-                const baseUrl = window.location.origin + '/';
                 
                 if (data.media_type === 'image') {
-                    const imageSrc = baseUrl + data.media_path;
-                    content = `<img src="${imageSrc}" alt="${data.judul}" class="img-fluid rounded" style="max-width: 100%;" onerror="this.src='{{ asset('assets/images/placeholder.jpg') }}'">`;
+                    content = `<img src="${data.media_path}" alt="${data.judul}" class="img-fluid rounded" style="max-width: 100%;" onerror="this.src='{{ asset('assets/images/placeholder.jpg') }}'">`;
                 } else if (data.media_type === 'youtube_link') {
                     try {
                         const url = new URL(data.media_path);
@@ -326,18 +343,16 @@ document.querySelectorAll('.btn-preview-modal').forEach(button => {
                         content = `<p class="alert alert-danger">URL YouTube tidak valid</p>`;
                     }
                 } else if (data.media_type === 'video') {
-                    const videoSrc = baseUrl + data.media_path;
-                    content = `<video width="100%" height="600" controls><source src="${videoSrc}"></video>`;
+                    content = `<video width="100%" height="600" controls><source src="${data.media_path}"></video>`;
                 } else {
-                    const fileSrc = baseUrl + data.media_path;
-                    content = `<p><a href="${fileSrc}" target="_blank" class="btn btn-primary"><i class="fas fa-download"></i> Unduh ${data.judul}</a></p>`;
+                    content = `<p><a href="${data.media_path}" target="_blank" class="btn btn-primary"><i class="fas fa-download"></i> Unduh ${data.judul}</a></p>`;
                 }
                 document.getElementById('preview-content').innerHTML = content;
                 $('#previewMediaModal').modal('show');
             })
             .catch(error => {
                 console.error('Error fetching karya:', error);
-                alert('Gagal memuat preview media');
+                alert('Gagal memuat preview media: ' + error.message);
             });
     });
 });

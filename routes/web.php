@@ -18,11 +18,20 @@ Route::get('/', [HomeController::class, 'index']);
 
 Route::get('/sambutan', [SambutanController::class, 'show'])->name('sambutan.show');
 
-Route::get('/musik', [KategoriDetailController::class, 'show'])->defaults('slug', 'musik');
+// Authentication Routes (MUST BE BEFORE CATCH-ALL ROUTES)
+Route::get('/login', [AuthController::class, 'showLogin'])->name('login')->middleware('guest');
+Route::post('/login', [AuthController::class, 'handleLogin'])->name('login.handle')->middleware('guest');
 
-Route::get('/rupa', [KategoriDetailController::class, 'show'])->defaults('slug', 'rupa');
+Route::get('/register', [AuthController::class, 'showRegister'])->name('register.show')->middleware('guest');
+Route::post('/register', [AuthController::class, 'handleRegister'])->name('register.handle')->middleware('guest');
 
-Route::get('/film', [KategoriDetailController::class, 'show'])->defaults('slug', 'film');
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
+
+// API Routes (Public)
+Route::get('/api/sliders', [SliderController::class, 'getActive'])->name('api.sliders');
+Route::post('/karya-seni/{karyaSeni}/increment-views', [KategoriDetailController::class, 'incrementViews'])->name('karya-seni.increment-views');
+Route::get('/api/seniman/{senimanId}/profile', [KategoriDetailController::class, 'getSenimanProfile'])->name('api.seniman.profile');
+Route::get('/api/seniman/{userId}/karya/{kategoriSlug}', [KategoriDetailController::class, 'getSenimanKaryaByKategori'])->name('api.seniman.karya.kategori');
 
 // Test route for kategori-detail debugging
 Route::get('/test-kategori', function () {
@@ -35,19 +44,11 @@ Route::get('/test-kategori', function () {
     return view('test-kategori', compact('kategori', 'karyaSeni'));
 })->name('test.kategori');
 
-// API Routes (Public)
-Route::get('/api/sliders', [SliderController::class, 'getActive'])->name('api.sliders');
-Route::post('/karya-seni/{karyaSeni}/increment-views', [KategoriDetailController::class, 'incrementViews'])->name('karya-seni.increment-views');
-Route::get('/api/seniman/{senimanId}/profile', [KategoriDetailController::class, 'getSenimanProfile'])->name('api.seniman.profile');
+Route::get('/musik', [KategoriDetailController::class, 'show'])->defaults('slug', 'musik');
 
-// Authentication Routes
-Route::get('/login', [AuthController::class, 'showLogin'])->name('login')->middleware('guest');
-Route::post('/login', [AuthController::class, 'handleLogin'])->name('login.handle')->middleware('guest');
+Route::get('/rupa', [KategoriDetailController::class, 'show'])->defaults('slug', 'rupa');
 
-Route::get('/register', [AuthController::class, 'showRegister'])->name('register.show')->middleware('guest');
-Route::post('/register', [AuthController::class, 'handleRegister'])->name('register.handle')->middleware('guest');
-
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
+Route::get('/film', [KategoriDetailController::class, 'show'])->defaults('slug', 'film');
 
 // Protected Routes
 // Admin Dashboard
@@ -97,4 +98,6 @@ Route::middleware(['auth', 'seniman'])->group(function () {
 });
 
 // Dynamic Kategori Routes (MUST BE LAST - catches all remaining slugs)
+Route::get('/karya/{karyaSeni}', [KaryaSeniController::class, 'show'])->name('karya.show');
+Route::get('/seniman/{seniman}', [SenimanDetailController::class, 'show'])->name('seniman.show');
 Route::get('/{slug}', [KategoriDetailController::class, 'show'])->name('kategori.show');

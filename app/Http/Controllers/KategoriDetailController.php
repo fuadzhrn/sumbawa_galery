@@ -23,23 +23,17 @@ class KategoriDetailController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
-        // Use category-specific views untuk kategori yang sudah ada
-        $viewMap = [
-            'musik' => 'musik',
-            'rupa' => 'rupa',
-            'film' => 'film',
-        ];
-        
-        // Gunakan view spesifik jika ada, otherwise gunakan kategori-detail
-        $viewName = $viewMap[$slug] ?? 'kategori-detail';
-        
-        // Jika view tidak ditemukan, gunakan view kategori-detail sebagai fallback
-        // Pastikan view kategori-detail ada atau buat view yang generic
-        if (!view()->exists($viewName)) {
-            $viewName = 'kategori-detail';
-        }
-        
-        return view($viewName, compact('kategori', 'karyaSeni'));
+        // Get all seniman who have at least one approved karya in this kategori
+        $senimanList = Seniman::whereHas('user.karyaSeni', function ($query) use ($kategori) {
+            $query->where('kategori_id', $kategori->id)
+                ->where('status', 'approved');
+        })
+        ->with('user')
+        ->orderBy('nama', 'asc')
+        ->get();
+
+        // Gunakan template dinamis untuk semua kategori
+        return view('kategori-detail', compact('kategori', 'karyaSeni', 'senimanList'));
     }
 
     /**
@@ -83,6 +77,40 @@ class KategoriDetailController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'error' => 'Seniman tidak ditemukan',
+                'message' => $e->getMessage()
+            ], 404);
+        }
+    }
+
+    /**
+     * Get seniman's karya for specific kategori
+     */
+    public function getSenimanKaryaByKategori($userId, $kategoriSlug)
+    {
+        try {
+            $kategori = Kategori::where('slug', $kategoriSlug)->firstOrFail();
+            
+            // Get approved karya seni for this user in this kategori
+            $karya = KaryaSeni::where('user_id', $userId)
+                ->where('kategori_id', $kategori->id)
+                ->where('status', 'approved')
+                ->with(['kategori'])
+                ->orderBy('created_at', 'desc')
+                ->get()
+                ->map(function ($item) {
+                    return [
+                        'id' => $item->id,
+                        'judul' => $item->judul,
+                        'kategori' => $item->kategori->nama,
+                    ];
+                });
+
+            return response()->json([
+                'karya' => $karya,
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Data tidak ditemukan',
                 'message' => $e->getMessage()
             ], 404);
         }

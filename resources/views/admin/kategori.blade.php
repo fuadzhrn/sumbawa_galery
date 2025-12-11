@@ -85,6 +85,29 @@
                         @endforelse
                     </tbody>
                 </table>
+                
+                <!-- Pagination -->
+                @if($kategoris->hasPages())
+                <nav aria-label="Page navigation">
+                    <ul class="pagination pagination-sm m-0">
+                        @if($kategoris->onFirstPage())
+                            <li class="page-item disabled"><span class="page-link">← Sebelumnya</span></li>
+                        @else
+                            <li class="page-item"><a class="page-link" href="{{ $kategoris->previousPageUrl() }}">← Sebelumnya</a></li>
+                        @endif
+
+                        <li class="page-item disabled">
+                            <span class="page-link">Hal {{ $kategoris->currentPage() }} dari {{ $kategoris->lastPage() }}</span>
+                        </li>
+
+                        @if($kategoris->hasMorePages())
+                            <li class="page-item"><a class="page-link" href="{{ $kategoris->nextPageUrl() }}">Selanjutnya →</a></li>
+                        @else
+                            <li class="page-item disabled"><span class="page-link">Selanjutnya →</span></li>
+                        @endif
+                    </ul>
+                </nav>
+                @endif
             </div>
         </div>
     </div>

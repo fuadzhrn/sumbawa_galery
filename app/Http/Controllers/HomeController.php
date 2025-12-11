@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\SliderImage;
+use App\Models\Kategori;
 use Illuminate\View\View;
 
 class HomeController extends Controller
@@ -16,6 +17,8 @@ class HomeController extends Controller
             ->orderBy('order')
             ->get();
 
-        return view('index', compact('sliders'));
+        $kategoris = Kategori::orderBy('nama')->get();
+
+        return view('index', compact('sliders', 'kategoris'));
     }
 }

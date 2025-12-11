@@ -4,241 +4,285 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Login - Galery Sumbawa</title>
+    <title>Login - Portal Karya Seniman Budaya Sumbawa</title>
 
-    <!-- Google Font: Source Sans Pro -->
+    <!-- Google Font -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- iCheck Bootstrap -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/icheck-bootstrap/3.0.1/icheck-bootstrap.min.css">
-    <!-- Theme style -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/3.2.0/css/adminlte.min.css">
+    <!-- Custom Auth CSS -->
+    <link rel="stylesheet" href="{{ asset('css/auth.css') }}?v={{ time() }}">
     
     <style>
-        :root {
-            --primary-blue: #1e40af;
-        }
-        
+        /* Additional custom styles for this page */
         body {
-            background: linear-gradient(135deg, var(--primary-blue) 0%, #3b82f6 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+            font-family: 'Source Sans Pro', sans-serif;
         }
-        
+
         .login-page {
             background: transparent;
             display: flex;
             align-items: center;
             justify-content: center;
             min-height: 100vh;
+            padding: 20px;
         }
-        
+
         .login-box {
             width: 100%;
             max-width: 500px;
-            margin: auto;
         }
-        
+
         .card {
+            border-radius: 12px;
+            overflow: hidden;
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
             border: none;
-            border-radius: 10px;
-            overflow: hidden;
+            background-color: white;
         }
-        
+
         .card-header {
-            background: linear-gradient(135deg, var(--primary-blue) 0%, #3b82f6 100%);
-            padding: 30px;
+            padding: 2rem;
             text-align: center;
+            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
             color: white;
         }
-        
+
         .card-header h2 {
             margin: 0;
-            font-size: 28px;
-            font-weight: 600;
+            font-size: 1.75rem;
+            font-weight: 700;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
+            gap: 0.75rem;
         }
-        
+
         .card-header p {
-            margin: 5px 0 0 0;
-            font-size: 14px;
+            margin: 0.5rem 0 0 0;
+            font-size: 0.875rem;
             opacity: 0.9;
         }
-        
+
         .card-body {
-            padding: 40px;
+            padding: 2.5rem;
         }
-        
+
+        /* Form Group Styling */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
         .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
             font-weight: 600;
             color: #333;
-            margin-bottom: 8px;
+            font-size: 0.95rem;
         }
-        
+
         .form-control {
-            border: 2px solid #e5e7eb;
-            border-radius: 6px;
-            padding: 12px 15px;
-            font-size: 14px;
-            transition: all 0.3s ease;
-        }
-        
-        .form-control:focus {
-            border-color: var(--primary-blue);
-            box-shadow: 0 0 0 0.2rem rgba(30, 64, 175, 0.25);
-        }
-        
-        .input-group-text {
-            border: 2px solid #e5e7eb;
-            background: white;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .input-group:focus-within .input-group-text {
-            border-color: var(--primary-blue);
-        }
-        
-        .btn-login {
-            background: linear-gradient(135deg, var(--primary-blue) 0%, #3b82f6 100%);
-            border: none;
-            padding: 12px;
-            font-size: 16px;
-            font-weight: 600;
-            border-radius: 6px;
             width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-family: inherit;
             transition: all 0.3s ease;
-            margin-top: 10px;
+            background-color: #fff;
         }
-        
-        .btn-login:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(30, 64, 175, 0.3);
-            color: white;
+
+        .form-control:focus {
+            outline: none;
+            border-color: #1e40af;
+            box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.1);
+            background-color: #fff;
         }
-        
-        .btn-login:active {
-            transform: translateY(0);
+
+        .form-control::placeholder {
+            color: #999;
+            font-size: 0.95rem;
         }
-        
-        .remember-me {
+
+        .form-control.is-invalid {
+            border-color: #dc2626;
+            background-color: #fef2f2;
+        }
+
+        .form-control.is-invalid:focus {
+            box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+        }
+
+        /* Input Group */
+        .input-group {
             display: flex;
             align-items: center;
-            gap: 8px;
-            margin: 20px 0;
-        }
-        
-        .remember-me input[type="checkbox"] {
-            cursor: pointer;
-        }
-        
-        .remember-me label {
-            margin: 0;
-            font-weight: normal;
-            cursor: pointer;
-        }
-        
-        .forgot-password {
-            text-align: center;
-            margin-top: 20px;
-        }
-        
-        .forgot-password a {
-            color: var(--primary-blue);
-            text-decoration: none;
-            font-weight: 500;
+            border: 2px solid #e5e7eb;
+            border-radius: 6px;
+            background-color: white;
             transition: all 0.3s ease;
         }
-        
-        .forgot-password a:hover {
-            text-decoration: underline;
+
+        .input-group:focus-within {
+            border-color: #1e40af;
+            box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.1);
         }
-        
-        .register-divider {
-            text-align: center;
-            margin: 25px 0 20px 0;
-            padding: 0;
-            border-top: 1px solid #e5e7eb;
-            padding-top: 20px;
-        }
-        
-        .register-divider span {
-            background: white;
-            padding: 0 10px;
-            color: #999;
-            font-size: 13px;
-        }
-        
-        .btn-register-link {
-            display: block;
-            width: 100%;
-            padding: 12px;
-            text-align: center;
-            background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
-            color: white;
+
+        .input-group .form-control {
             border: none;
-            border-radius: 6px;
-            font-weight: 600;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            margin-bottom: 10px;
+            box-shadow: none;
+            padding: 0.75rem 1rem;
+            flex: 1;
         }
-        
-        .btn-register-link:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(16, 185, 129, 0.3);
-            color: white;
-        }
-        
-        .btn-register-link i {
-            margin-right: 5px;
-        }
-        
-        .alert {
-            border-radius: 6px;
+
+        .input-group .form-control:focus {
+            box-shadow: none;
             border: none;
-            margin-bottom: 20px;
         }
-        
-        .alert-danger {
-            background-color: #fee2e2;
-            color: #991b1b;
-        }
-        
-        .invalid-feedback {
-            display: block;
-            color: #dc2626;
-            font-size: 13px;
-            margin-top: 5px;
-        }
-        
-        .toggle-password {
+
+        .input-group-text {
+            padding: 0.75rem 1rem;
+            background-color: transparent;
+            border: none;
             cursor: pointer;
+            color: #666;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+
+        .input-group-text:hover {
+            color: #1e40af;
+        }
+
+        /* Checkbox Styling */
+        .form-check {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-check-input {
+            width: 18px;
+            height: 18px;
+            margin-top: 0;
+            cursor: pointer;
+            accent-color: #1e40af;
+            border: 2px solid #e5e7eb;
+            border-radius: 4px;
+        }
+
+        .form-check-input:hover {
+            border-color: #1e40af;
+        }
+
+        .form-check-label {
+            cursor: pointer;
+            margin-bottom: 0;
+            font-size: 0.95rem;
+            color: #333;
             user-select: none;
         }
-        
+
+        /* Button Styling */
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+            color: white;
+            width: 100%;
+            padding: 0.875rem 1.5rem;
+            font-size: 1.05rem;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #1a35a5 0%, #2d6ce8 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(30, 64, 175, 0.3);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+            box-shadow: 0 4px 8px rgba(30, 64, 175, 0.2);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-primary i {
+            margin-right: 0.5rem;
+        }
+
+        /* Error Message */
+        .error-message {
+            display: block;
+            font-size: 0.875rem;
+            color: #dc2626;
+            margin-top: 0.25rem;
+        }
+
+        .card-footer {
+            background: #f9fafb;
+            padding: 1.5rem 2.5rem;
+            text-align: center;
+            border-top: 1px solid #e5e7eb;
+            font-size: 0.95rem;
+            color: #666;
+        }
+
+        .card-footer a {
+            color: #1e40af;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .card-footer a:hover {
+            text-decoration: underline;
+            color: #1530a8;
+        }
+
         @media (max-width: 576px) {
             .login-box {
                 width: 95%;
             }
             
             .card-header {
-                padding: 20px;
+                padding: 1.5rem;
             }
-            
+
             .card-header h2 {
-                font-size: 22px;
+                font-size: 1.5rem;
+                gap: 0.5rem;
             }
-            
+
             .card-body {
-                padding: 25px;
+                padding: 1.5rem;
+            }
+
+            .card-footer {
+                padding: 1rem 1.5rem;
+                font-size: 0.9rem;
+            }
+
+            .form-group {
+                margin-bottom: 1.25rem;
             }
         }
     </style>
@@ -247,134 +291,102 @@
     <div class="login-page">
         <div class="login-box">
             <div class="card">
-                <!-- Header -->
+                <!-- Card Header -->
                 <div class="card-header">
                     <h2>
-                        <i class="fas fa-lock"></i>
+                        <i class="fas fa-sign-in-alt"></i>
                         Login
                     </h2>
-                    <p>Galery Sumbawa Management System</p>
+                    <p>Masuk ke Portal Karya Seniman</p>
                 </div>
 
-                <!-- Body -->
+                <!-- Card Body -->
                 <div class="card-body">
-                    <!-- Error Messages -->
                     @if ($errors->any())
-                        <div class="alert alert-danger" role="alert">
-                            <i class="fas fa-exclamation-circle"></i>
-                            <strong>Login Gagal!</strong>
-                            @foreach ($errors->all() as $error)
-                                <div>{{ $error }}</div>
-                            @endforeach
+                        <div style="background-color: #fee2e2; color: #991b1b; border-left: 4px solid #dc2626; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; font-size: 0.95rem;">
+                            <strong><i class="fas fa-exclamation-circle"></i> Login Gagal!</strong>
+                            <ul style="margin: 0.5rem 0 0 0; padding-left: 1.5rem;">
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
                         </div>
                     @endif
 
-                    <!-- Login Form -->
-                    <form action="{{ route('login') }}" method="POST" class="login-form">
+                    <form method="POST" action="{{ route('login.handle') }}">
                         @csrf
 
-                        <!-- Email -->
+                        <!-- Email Input -->
                         <div class="form-group">
-                            <label for="email">Email Address</label>
-                            <input 
-                                type="email" 
-                                class="form-control @error('email') is-invalid @enderror" 
-                                id="email" 
-                                name="email"
-                                value="{{ old('email') }}"
-                                placeholder="Masukkan email Anda"
-                                required
-                                autocomplete="email"
-                            >
+                            <label for="email">Email</label>
+                            <input type="email" 
+                                   class="form-control @error('email') is-invalid @enderror" 
+                                   id="email" 
+                                   name="email" 
+                                   value="{{ old('email') }}" 
+                                   required 
+                                   autofocus
+                                   placeholder="nama@example.com">
                             @error('email')
-                                <span class="invalid-feedback">{{ $message }}</span>
+                                <span class="error-message">{{ $message }}</span>
                             @enderror
                         </div>
 
-                        <!-- Password -->
+                        <!-- Password Input -->
                         <div class="form-group">
                             <label for="password">Password</label>
                             <div class="input-group">
-                                <input 
-                                    type="password" 
-                                    class="form-control @error('password') is-invalid @enderror" 
-                                    id="password" 
-                                    name="password"
-                                    placeholder="Masukkan password Anda"
-                                    required
-                                    autocomplete="current-password"
-                                >
-                                <div class="input-group-append">
-                                    <span class="input-group-text toggle-password" onclick="togglePassword()">
-                                        <i class="fas fa-eye" id="toggle-icon"></i>
-                                    </span>
-                                </div>
+                                <input type="password" 
+                                       class="form-control @error('password') is-invalid @enderror" 
+                                       id="password" 
+                                       name="password" 
+                                       required
+                                       placeholder="Masukkan password Anda">
+                                <span class="input-group-text" onclick="togglePassword()">
+                                    <i class="fas fa-eye"></i>
+                                </span>
                             </div>
                             @error('password')
-                                <span class="invalid-feedback d-block">{{ $message }}</span>
+                                <span class="error-message">{{ $message }}</span>
                             @enderror
                         </div>
 
                         <!-- Remember Me -->
-                        <div class="remember-me">
-                            <input 
-                                type="checkbox" 
-                                id="remember" 
-                                name="remember"
-                                {{ old('remember') ? 'checked' : '' }}
-                            >
-                            <label for="remember">Ingat saya</label>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="remember" name="remember" {{ old('remember') ? 'checked' : '' }}>
+                            <label class="form-check-label" for="remember">
+                                Ingat saya
+                            </label>
                         </div>
 
                         <!-- Login Button -->
-                        <button type="submit" class="btn btn-primary btn-login">
+                        <button type="submit" class="btn btn-primary">
                             <i class="fas fa-sign-in-alt"></i> Login
                         </button>
-
-                        <!-- Forgot Password Link -->
-                        <div class="forgot-password">
-                            @if (Route::has('password.request'))
-                                <a href="{{ route('password.request') }}">
-                                    <i class="fas fa-key"></i> Lupa Password?
-                                </a>
-                            @endif
-                        </div>
                     </form>
+                </div>
 
-                    <!-- Register Divider -->
-                    <div class="register-divider">
-                        <span>Belum punya akun?</span>
-                    </div>
-
-                    <!-- Register Link -->
-                    <a href="{{ route('register.show') }}" class="btn-register-link">
-                        <i class="fas fa-user-plus"></i> Daftar Sekarang
-                    </a>
+                <!-- Card Footer -->
+                <div class="card-footer">
+                    Belum punya akun? <a href="{{ route('register.show') }}">Daftar di sini</a>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- jQuery -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <!-- Bootstrap 4 -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/js/bootstrap.bundle.min.js"></script>
-    <!-- AdminLTE App -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/3.2.0/js/adminlte.min.js"></script>
-
     <script>
         function togglePassword() {
-            const passwordInput = document.getElementById('password');
-            const toggleIcon = document.getElementById('toggle-icon');
+            const input = document.getElementById('password');
+            const icon = event.target.closest('.input-group-text').querySelector('i');
             
-            if (passwordInput.type === 'password') {
-                passwordInput.type = 'text';
-                toggleIcon.classList.remove('fa-eye');
-                toggleIcon.classList.add('fa-eye-slash');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
             } else {
-                passwordInput.type = 'password';
-                toggleIcon.classList.remove('fa-eye-slash');
-                toggleIcon.classList.add('fa-eye');
+                input.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
             }
         }
     </script>

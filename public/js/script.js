@@ -146,6 +146,9 @@ function initNavigation() {
             });
         }
     });
+
+    // Initialize sidebar submenu toggle
+    initSidebarToggle();
 }
 
 /**
@@ -181,3 +184,32 @@ function fixActiveNavigation() {
     });
 }
 
+/**
+ * Initialize Sidebar Toggle for Kategori Submenu
+ */
+function initSidebarToggle() {
+    const toggleButtons = document.querySelectorAll('.nav-toggle');
+    console.log('[initSidebarToggle] Found toggle buttons:', toggleButtons.length);
+    
+    toggleButtons.forEach((button, index) => {
+        console.log(`[initSidebarToggle] Button ${index}:`, button);
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            const toggleId = this.getAttribute('data-toggle');
+            const submenu = document.getElementById(toggleId);
+            const isExpanded = this.getAttribute('aria-expanded') === 'true';
+            
+            console.log(`[Toggle Click] toggleId: ${toggleId}, submenu found: ${!!submenu}, isExpanded: ${isExpanded}`);
+            
+            if (submenu) {
+                // Toggle submenu visibility - ONLY untuk submenu yang di-klik
+                submenu.classList.toggle('show');
+                
+                // Update aria-expanded attribute
+                this.setAttribute('aria-expanded', !isExpanded);
+            }
+        });
+    });
+}

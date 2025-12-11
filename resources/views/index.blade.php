@@ -4,7 +4,135 @@
 
 @section('url-dummy', 'https://sumbawa-portal.local/gallery')
 
+@section('extra-css')
+    <style>
+        /* Sidebar fixed di kiri */
+        .kategori-sidebar {
+            width: 200px;
+            position: fixed;
+            left: 0;
+            top: 80px;
+            height: auto;
+            max-height: calc(100vh - 80px);
+            background: white;
+            border-right: 1px solid #ddd;
+            overflow-y: auto;
+            padding: 0;
+            margin: 0;
+            z-index: 100;
+        }
+
+        .kategori-sidebar-card {
+            background: white;
+            border: none;
+            border-radius: 0;
+            overflow: visible;
+            box-shadow: none;
+            margin: 0;
+        }
+
+        .kategori-sidebar-header {
+            background: #1e88e5;
+            color: white;
+            padding: 1rem;
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: none;
+        }
+
+        .kategori-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .kategori-item {
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .kategori-item:last-child {
+            border-bottom: none;
+        }
+
+        .kategori-link {
+            display: block;
+            padding: 1rem;
+            color: #333;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            font-weight: 500;
+            font-size: 13px;
+            background: white;
+            border-left: none;
+        }
+
+        .kategori-link:hover {
+            background: #f5f5f5;
+            color: #1e88e5;
+            border-left: none;
+        }
+
+        .kategori-link.active {
+            background: #1e88e5;
+            color: white;
+            border-left: none;
+        }
+
+        @media (max-width: 768px) {
+            .kategori-sidebar {
+                position: relative;
+                width: 100%;
+                top: auto;
+                left: auto;
+                border-right: none;
+                border-bottom: 1px solid #ddd;
+                max-height: none;
+            }
+
+            .kategori-list {
+                display: flex;
+                flex-wrap: wrap;
+            }
+
+            .kategori-item {
+                flex: 1;
+                min-width: 80px;
+                border-bottom: none;
+            }
+
+            .kategori-link {
+                text-align: center;
+                padding: 0.75rem;
+                border: 1px solid #ddd;
+                border-radius: 4px;
+            }
+        }
+    </style>
+@endsection
+
 @section('content')
+                    <!-- SIDEBAR KATEGORI -->
+                    <aside class="kategori-sidebar">
+                        <div class="kategori-sidebar-card">
+                            <div class="kategori-sidebar-header">Kategori Seni</div>
+                            <ul class="kategori-list">
+                                @forelse ($kategoris as $kategori)
+                                    <li class="kategori-item">
+                                        <a href="/{{ $kategori->slug }}" class="kategori-link">
+                                            {{ $kategori->nama }}
+                                        </a>
+                                    </li>
+                                @empty
+                                    <li style="padding: 1rem; color: #999; text-align: center;">
+                                        Belum ada kategori
+                                    </li>
+                                @endforelse
+                            </ul>
+                        </div>
+                    </aside>
+
                 <!-- SLIDER SECTION -->
                 <section class="slider-section">
                     <div class="slider-container">
@@ -38,7 +166,7 @@
                             @endforelse
                         </div>
                     </div>
+                  
                 </section>
-
                 
 @endsection

@@ -14,7 +14,7 @@ class KaryaSeniController extends Controller
      */
     public function index()
     {
-        $karyaSeni = KaryaSeni::with(['user', 'kategori'])->paginate(10);
+        $karyaSeni = KaryaSeni::with(['user', 'kategori'])->paginate(5);
         return view('admin.karya-seni', compact('karyaSeni'));
     }
 
@@ -25,28 +25,43 @@ class KaryaSeniController extends Controller
     {
         $karyaSeni->load(['user', 'kategori']);
         
-        return response()->json([
-            'id' => $karyaSeni->id,
-            'judul' => $karyaSeni->judul,
-            'deskripsi' => $karyaSeni->deskripsi,
-            'media_type' => $karyaSeni->media_type,
-            'media_path' => $karyaSeni->media_path,
-            'thumbnail' => $karyaSeni->thumbnail ? asset($karyaSeni->thumbnail) : null,
-            'status' => $karyaSeni->status,
-            'alasan_penolakan' => $karyaSeni->alasan_penolakan,
-            'views' => $karyaSeni->views,
-            'likes' => $karyaSeni->likes,
-            'created_at' => $karyaSeni->created_at,
-            'user' => [
-                'id' => $karyaSeni->user->id,
-                'name' => $karyaSeni->user->name,
-                'email' => $karyaSeni->user->email,
-            ],
-            'kategori' => [
-                'id' => $karyaSeni->kategori->id,
-                'nama' => $karyaSeni->kategori->nama,
-            ],
-        ]);
+        // Check if it's an API request (from AJAX)
+        if (request()->expectsJson() || request()->wantsJson()) {
+            return response()->json([
+                'id' => $karyaSeni->id,
+                'judul' => $karyaSeni->judul,
+                'deskripsi' => $karyaSeni->deskripsi,
+                'media_type' => $karyaSeni->media_type,
+                'media_path' => asset($karyaSeni->media_path),
+                'thumbnail' => $karyaSeni->thumbnail ? asset($karyaSeni->thumbnail) : null,
+                'status' => $karyaSeni->status,
+                'alasan_penolakan' => $karyaSeni->alasan_penolakan,
+                'views' => $karyaSeni->views,
+                'likes' => $karyaSeni->likes,
+                'created_at' => $karyaSeni->created_at,
+                'user' => [
+                    'id' => $karyaSeni->user->id,
+                    'name' => $karyaSeni->user->name,
+                    'email' => $karyaSeni->user->email,
+                ],
+                'kategori' => [
+                    'id' => $karyaSeni->kategori->id,
+                    'nama' => $karyaSeni->kategori->nama,
+                ],
+            ]);
+        }
+
+        // Otherwise, display full page view (only if approved)
+        if ($karyaSeni->status !== 'approved') {
+            abort(404, 'Karya seni tidak ditemukan atau belum disetujui');
+        }
+
+        $karyaSeni->load(['user.seniman', 'kategori']);
+        
+        // Increment views
+        $karyaSeni->increment('views');
+        
+        return view('karya-detail', compact('karyaSeni'));
     }
 
     /**

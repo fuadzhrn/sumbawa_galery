@@ -40,10 +40,10 @@
                     data-nama="{{ $karya->user->name }}" 
                     data-kategori="{{ $karya->kategori->nama }}"
                     data-foto="{{ $karya->user->seniman?->foto ? asset($karya->user->seniman->foto) : asset('assets/images/img1.png') }}">
-                    Lihat Biografi
+                    Biografi
                 </button>
             </div>
-        </div>
+                </div>
         @empty
         <div style="grid-column: 1 / -1; text-align: center; padding: 60px 20px; color: #999;">
             <p style="font-size: 16px;">Belum ada karya {{ strtolower($kategori->nama) }}</p>
@@ -51,8 +51,6 @@
         @endforelse
     </div>
 </section>
-
-<!-- Modal -->
 <div id="biographyModal" class="modal">
     <div class="modal-content">
         <div class="modal-header">
@@ -83,53 +81,35 @@
 @section('extra-js')
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Attach click listeners to all biografi buttons
+    // Biografi button listeners
     document.querySelectorAll('.btn-biografi').forEach(button => {
         button.addEventListener('click', function() {
-            const karyaId = this.getAttribute('data-karya-id');
             const senimanId = this.getAttribute('data-seniman-id');
-
-            console.log('Biografi button clicked:', { karyaId, senimanId });
+            const karyaId = this.getAttribute('data-karya-id');
 
             if (!senimanId) {
-                console.error('Seniman ID tidak ditemukan');
                 alert('Seniman tidak ditemukan');
                 return;
             }
 
-            // Fetch seniman profile
             fetch(`/api/seniman/${senimanId}/profile`)
-                .then(response => {
-                    console.log('API Response Status:', response.status);
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
-                    return response.json();
-                })
+                .then(response => response.json())
                 .then(data => {
-                    console.log('Seniman data:', data);
-                    console.log('Foto URL:', data.foto);
-                    console.log('Biografi:', data.biografi);
-                    console.log('Nama:', data.nama);
-                    console.log('Kategori:', data.kategori);
-                    
-                    // Populate modal
                     document.getElementById('senimanNama').textContent = data.nama || 'Nama tidak tersedia';
                     document.getElementById('senimanKategori').textContent = data.kategori || 'Kategori tidak tersedia';
                     document.getElementById('senimanFoto').src = data.foto || '{{ asset("assets/images/img1.png") }}';
                     document.getElementById('senimanBiografi').textContent = data.biografi || 'Deskripsi tidak tersedia';
 
-                    // Populate karya list
                     const karyaList = document.getElementById('karyaList');
                     karyaList.innerHTML = '';
                     
                     if (data.karya && data.karya.length > 0) {
-                        data.karya.forEach(karya => {
+                        data.karya.forEach(k => {
                             const li = document.createElement('li');
                             li.className = 'karya-item';
                             li.innerHTML = `
-                                <a href="/karya/${karya.id}" class="karya-link">${karya.judul}</a>
-                                <div class="karya-kategori">${karya.kategori}</div>
+                                <a href="/karya/${k.id}" class="karya-link">${k.judul}</a>
+                                <div class="karya-kategori">${k.kategori}</div>
                             `;
                             karyaList.appendChild(li);
                         });
@@ -140,45 +120,27 @@ document.addEventListener('DOMContentLoaded', function() {
                         karyaList.appendChild(li);
                     }
 
-                    // Show modal
                     document.getElementById('biographyModal').style.display = 'block';
                 })
                 .catch(error => {
                     console.error('Error fetching seniman:', error);
-                    alert('Gagal memuat data seniman: ' + error.message);
+                    alert('Gagal memuat data seniman');
                 });
 
-            // Increment views
             fetch(`/karya-seni/${karyaId}/increment-views`, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                // Update views count in the UI
-                const button = document.querySelector(`.btn-biografi[data-karya-id="${karyaId}"]`);
-                if (button) {
-                    const card = button.closest('.kategori-card');
-                    const viewsText = card.querySelector('.views-text');
-                    if (viewsText) {
-                        viewsText.textContent = data.views;
-                    }
                 }
             })
             .catch(error => console.error('Error incrementing views:', error));
         });
     });
 
-    function closeBiographyModal() {
+    window.closeBiographyModal = function() {
         document.getElementById('biographyModal').style.display = 'none';
-    }
+    };
 
-    window.closeBiographyModal = closeBiographyModal;
-
-    // Close modal when clicking outside
     window.addEventListener('click', function(event) {
         const modal = document.getElementById('biographyModal');
         if (event.target === modal) {
