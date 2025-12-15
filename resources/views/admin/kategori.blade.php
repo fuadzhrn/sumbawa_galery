@@ -6,43 +6,20 @@
 @section('content')
 <div class="row">
     <div class="col-12">
-        <div class="card">
-            <div class="card-header with-border">
-                <h3 class="card-title">Tambah Kategori Baru</h3>
-            </div>
-            <div class="card-body">
-                <form method="POST" action="{{ route('kategori.store') }}" class="form-horizontal">
-                    @csrf
-                    <div class="form-group row">
-                        <label for="nama_kategori" class="col-sm-2 col-form-label">Nama Kategori</label>
-                        <div class="col-sm-10">
-                            <input type="text" 
-                                class="form-control @error('nama_kategori') is-invalid @enderror" 
-                                id="nama_kategori" 
-                                name="nama_kategori" 
-                                placeholder="Contoh: Tari Tradisional"
-                                value="{{ old('nama_kategori') }}"
-                                required>
-                            @error('nama_kategori')
-                                <span class="invalid-feedback">{{ $message }}</span>
-                            @enderror
-                        </div>
+        <div class="mb-3">
+            <div class="d-flex flex-column align-items-end">
+                <button type="button" class="btn btn-primary btn-sm mb-2" data-toggle="modal" data-target="#tambahKategoriModal">
+                    <i class="fas fa-plus"></i> Tambah Kategori
+                </button>
+                <div class="input-group" style="max-width: 200px;">
+                    <input type="text" class="form-control" id="searchKategori" placeholder="Cari kategori...">
+                    <div class="input-group-append">
+                        <span class="input-group-text"><i class="fas fa-search"></i></span>
                     </div>
-                    <div class="form-group row">
-                        <div class="offset-sm-2 col-sm-10">
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-plus"></i> Tambah Kategori
-                            </button>
-                        </div>
-                    </div>
-                </form>
+                </div>
             </div>
         </div>
-    </div>
-</div>
-
-<div class="row mt-4">
-    <div class="col-12">
+        
         <div class="card">
             <div class="card-header with-border">
                 <h3 class="card-title">Daftar Kategori Seni</h3>
@@ -58,9 +35,9 @@
                     </thead>
                     <tbody>
                         @forelse($kategoris as $key => $kategori)
-                        <tr>
+                        <tr class="kategori-row">
                             <td>{{ $key + 1 }}</td>
-                            <td>{{ $kategori->nama }}</td>
+                            <td class="kategori-nama">{{ $kategori->nama }}</td>
                             <td>
                                 <button type="button" class="btn btn-sm btn-info btn-edit" 
                                     data-kategori-id="{{ $kategori->id }}" 
@@ -141,11 +118,63 @@
     </div>
 </div>
 
+<!-- Tambah Kategori Modal -->
+<div class="modal fade" id="tambahKategoriModal" tabindex="-1" role="dialog" aria-labelledby="tambahKategoriLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="tambahKategoriLabel">Tambah Kategori Baru</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form method="POST" action="{{ route('kategori.store') }}">
+                @csrf
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="nama_kategori">Nama Kategori</label>
+                        <input type="text" 
+                            class="form-control @error('nama_kategori') is-invalid @enderror" 
+                            id="nama_kategori" 
+                            name="nama_kategori" 
+                            placeholder="Contoh: Tari Tradisional"
+                            value="{{ old('nama_kategori') }}"
+                            required>
+                        @error('nama_kategori')
+                            <span class="invalid-feedback d-block">{{ $message }}</span>
+                        @enderror
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-primary">Tambah Kategori</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 <script>
 function editKategori(id, nama) {
     document.getElementById('edit_nama').value = nama;
     document.getElementById('editKategoriForm').action = '/admin/kategori/' + id;
     $('#editKategoriModal').modal('show');
 }
+
+// Search functionality
+document.getElementById('searchKategori').addEventListener('keyup', function() {
+    var searchText = this.value.toLowerCase();
+    var tableRows = document.querySelectorAll('.kategori-row');
+    
+    tableRows.forEach(function(row) {
+        var kategoriNama = row.querySelector('.kategori-nama').textContent.toLowerCase();
+        
+        if (kategoriNama.includes(searchText)) {
+            row.style.display = '';
+        } else {
+            row.style.display = 'none';
+        }
+    });
+});
 </script>
 @endsection

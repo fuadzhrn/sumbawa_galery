@@ -170,11 +170,62 @@
     margin-bottom: 0.5rem;
 }
 
+/* VISI MISI TEXT STYLE */
+.visi-misi-text {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+}
+
+.visi-misi-text.single-column {
+    grid-template-columns: 1fr;
+}
+
+.visi-section,
+.misi-section {
+    padding: 1.5rem;
+    background: linear-gradient(135deg, rgba(30, 136, 229, 0.05) 0%, rgba(30, 136, 229, 0.1) 100%);
+    border-radius: 8px;
+    border-left: 4px solid var(--primary-blue);
+}
+
+.visi-section h3,
+.misi-section h3 {
+    font-size: 1.2rem;
+    color: var(--primary-blue);
+    font-weight: 700;
+    margin: 0 0 1rem 0;
+}
+
+.visi-section p,
+.misi-section p {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: var(--text-dark);
+    margin: 0;
+}
+
+.misi-section ul {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: var(--text-dark);
+    margin: 0;
+    padding-left: 1.5rem;
+}
+
+.misi-section li {
+    margin-bottom: 0.75rem;
+}
+
 /* OBJECTIVES GRID */
 .objectives-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 1.5rem;
+}
+
+.objectives-grid.single-column {
+    grid-template-columns: 1fr;
 }
 
 .objective-item {
@@ -280,6 +331,10 @@
     margin-bottom: 1.5rem;
 }
 
+.gratitude-list.single-column {
+    grid-template-columns: 1fr;
+}
+
 .gratitude-item {
     padding: 1.25rem;
     background-color: var(--white);
@@ -348,6 +403,7 @@
     }
 
     .visi-misi-grid,
+    .visi-misi-text,
     .gratitude-list {
         grid-template-columns: 1fr;
     }

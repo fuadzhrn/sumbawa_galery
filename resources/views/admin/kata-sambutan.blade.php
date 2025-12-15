@@ -70,24 +70,9 @@
                     <h3 class="card-title m-0"><i class="fas fa-eye"></i> Visi</h3>
                 </div>
                 <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <label for="visi_image" class="font-weight-bold">Foto Visi</label>
-                            <div class="text-center mb-3">
-                                <img src="{{ asset($sambutan->visi_image) }}" alt="Visi" class="img-fluid rounded" style="max-height: 250px; object-fit: cover; width: 100%;">
-                            </div>
-                            <button type="button" class="btn btn-info btn-block mb-2" onclick="document.getElementById('visi_image').click()">
-                                <i class="fas fa-cloud-upload-alt"></i> Pilih Gambar
-                            </button>
-                            <div class="custom-file-input" style="display:none;">
-                                <input type="file" class="form-control-file" id="visi_image" name="visi_image" accept="image/*" onchange="previewFile(this, 'visiPreview')">
-                            </div>
-                            <div id="visiPreview" class="mt-3"></div>
-                        </div>
-                        <div class="col-md-6">
-                            <label for="visi_text" class="font-weight-bold">Teks Visi</label>
-                            <textarea id="visi_text" name="visi_text" rows="6" class="form-control" placeholder="Masukkan teks visi">{{ $sambutan->visi_text }}</textarea>
-                        </div>
+                    <div class="form-group">
+                        <label for="visi_text" class="font-weight-bold">Teks Visi</label>
+                        <textarea id="visi_text" name="visi_text" rows="6" class="form-control" placeholder="Masukkan teks visi">{{ $sambutan->visi_text }}</textarea>
                     </div>
                 </div>
             </div>
@@ -98,24 +83,9 @@
                     <h3 class="card-title m-0"><i class="fas fa-bullseye"></i> Misi</h3>
                 </div>
                 <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <label for="misi_image" class="font-weight-bold">Foto Misi</label>
-                            <div class="text-center mb-3">
-                                <img src="{{ asset($sambutan->misi_image) }}" alt="Misi" class="img-fluid rounded" style="max-height: 250px; object-fit: cover; width: 100%;">
-                            </div>
-                            <button type="button" class="btn btn-success btn-block mb-2" onclick="document.getElementById('misi_image').click()">
-                                <i class="fas fa-cloud-upload-alt"></i> Pilih Gambar
-                            </button>
-                            <div class="custom-file-input" style="display:none;">
-                                <input type="file" class="form-control-file" id="misi_image" name="misi_image" accept="image/*" onchange="previewFile(this, 'misiPreview')">
-                            </div>
-                            <div id="misiPreview" class="mt-3"></div>
-                        </div>
-                        <div class="col-md-6">
-                            <label for="misi_text" class="font-weight-bold">Teks Misi</label>
-                            <textarea id="misi_text" name="misi_text" rows="6" class="form-control" placeholder="Masukkan teks misi">{{ $sambutan->misi_text }}</textarea>
-                        </div>
+                    <div class="form-group">
+                        <label for="misi_text" class="font-weight-bold">Teks Misi</label>
+                        <textarea id="misi_text" name="misi_text" rows="6" class="form-control" placeholder="Masukkan teks misi">{{ $sambutan->misi_text }}</textarea>
                     </div>
                 </div>
             </div>
@@ -136,30 +106,13 @@
                             <h5 class="m-0">Objective 1: <strong id="obj1_title_display">{{ $sambutan->obj1_title }}</strong></h5>
                         </div>
                         <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <label for="obj1_image" class="font-weight-bold">Foto</label>
-                                    <div class="text-center mb-3">
-                                        <img src="{{ asset($sambutan->obj1_image) }}" alt="Objective 1" class="img-fluid rounded" style="max-height: 200px; object-fit: cover; width: 100%;">
-                                    </div>
-                                    <button type="button" class="btn btn-primary btn-block mb-2" onclick="document.getElementById('obj1_image').click()">
-                                        <i class="fas fa-cloud-upload-alt"></i> Pilih Gambar
-                                    </button>
-                                    <div class="custom-file-input" style="display:none;">
-                                        <input type="file" class="form-control-file" id="obj1_image" name="obj1_image" accept="image/*" onchange="previewFile(this, 'obj1Preview')">
-                                    </div>
-                                    <div id="obj1Preview" class="mt-3"></div>
-                                </div>
-                                <div class="col-md-8">
-                                    <div class="form-group">
-                                        <label for="obj1_title" class="font-weight-bold">Judul</label>
-                                        <input type="text" id="obj1_title" name="obj1_title" class="form-control" placeholder="Judul objective" value="{{ $sambutan->obj1_title }}" onchange="updateObjTitle(1)">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="obj1_deskripsi" class="font-weight-bold">Deskripsi</label>
-                                        <textarea id="obj1_deskripsi" name="obj1_deskripsi" rows="4" class="form-control" placeholder="Deskripsi objective">{{ $sambutan->obj1_deskripsi }}</textarea>
-                                    </div>
-                                </div>
+                            <div class="form-group">
+                                <label for="obj1_title" class="font-weight-bold">Judul</label>
+                                <input type="text" id="obj1_title" name="obj1_title" class="form-control" placeholder="Judul objective" value="{{ $sambutan->obj1_title }}" onchange="updateObjTitle(1)">
+                            </div>
+                            <div class="form-group">
+                                <label for="obj1_deskripsi" class="font-weight-bold">Deskripsi</label>
+                                <textarea id="obj1_deskripsi" name="obj1_deskripsi" rows="4" class="form-control" placeholder="Deskripsi objective">{{ $sambutan->obj1_deskripsi }}</textarea>
                             </div>
                         </div>
                     </div>
@@ -170,30 +123,13 @@
                             <h5 class="m-0">Objective 2: <strong id="obj2_title_display">{{ $sambutan->obj2_title }}</strong></h5>
                         </div>
                         <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <label for="obj2_image" class="font-weight-bold">Foto</label>
-                                    <div class="text-center mb-3">
-                                        <img src="{{ asset($sambutan->obj2_image) }}" alt="Objective 2" class="img-fluid rounded" style="max-height: 200px; object-fit: cover; width: 100%;">
-                                    </div>
-                                    <button type="button" class="btn btn-info btn-block mb-2" onclick="document.getElementById('obj2_image').click()">
-                                        <i class="fas fa-cloud-upload-alt"></i> Pilih Gambar
-                                    </button>
-                                    <div class="custom-file-input" style="display:none;">
-                                        <input type="file" class="form-control-file" id="obj2_image" name="obj2_image" accept="image/*" onchange="previewFile(this, 'obj2Preview')">
-                                    </div>
-                                    <div id="obj2Preview" class="mt-3"></div>
-                                </div>
-                                <div class="col-md-8">
-                                    <div class="form-group">
-                                        <label for="obj2_title" class="font-weight-bold">Judul</label>
-                                        <input type="text" id="obj2_title" name="obj2_title" class="form-control" placeholder="Judul objective" value="{{ $sambutan->obj2_title }}" onchange="updateObjTitle(2)">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="obj2_deskripsi" class="font-weight-bold">Deskripsi</label>
-                                        <textarea id="obj2_deskripsi" name="obj2_deskripsi" rows="4" class="form-control" placeholder="Deskripsi objective">{{ $sambutan->obj2_deskripsi }}</textarea>
-                                    </div>
-                                </div>
+                            <div class="form-group">
+                                <label for="obj2_title" class="font-weight-bold">Judul</label>
+                                <input type="text" id="obj2_title" name="obj2_title" class="form-control" placeholder="Judul objective" value="{{ $sambutan->obj2_title }}" onchange="updateObjTitle(2)">
+                            </div>
+                            <div class="form-group">
+                                <label for="obj2_deskripsi" class="font-weight-bold">Deskripsi</label>
+                                <textarea id="obj2_deskripsi" name="obj2_deskripsi" rows="4" class="form-control" placeholder="Deskripsi objective">{{ $sambutan->obj2_deskripsi }}</textarea>
                             </div>
                         </div>
                     </div>
@@ -204,30 +140,13 @@
                             <h5 class="m-0">Objective 3: <strong id="obj3_title_display">{{ $sambutan->obj3_title }}</strong></h5>
                         </div>
                         <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <label for="obj3_image" class="font-weight-bold">Foto</label>
-                                    <div class="text-center mb-3">
-                                        <img src="{{ asset($sambutan->obj3_image) }}" alt="Objective 3" class="img-fluid rounded" style="max-height: 200px; object-fit: cover; width: 100%;">
-                                    </div>
-                                    <button type="button" class="btn btn-success btn-block mb-2" onclick="document.getElementById('obj3_image').click()">
-                                        <i class="fas fa-cloud-upload-alt"></i> Pilih Gambar
-                                    </button>
-                                    <div class="custom-file-input" style="display:none;">
-                                        <input type="file" class="form-control-file" id="obj3_image" name="obj3_image" accept="image/*" onchange="previewFile(this, 'obj3Preview')">
-                                    </div>
-                                    <div id="obj3Preview" class="mt-3"></div>
-                                </div>
-                                <div class="col-md-8">
-                                    <div class="form-group">
-                                        <label for="obj3_title" class="font-weight-bold">Judul</label>
-                                        <input type="text" id="obj3_title" name="obj3_title" class="form-control" placeholder="Judul objective" value="{{ $sambutan->obj3_title }}" onchange="updateObjTitle(3)">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="obj3_deskripsi" class="font-weight-bold">Deskripsi</label>
-                                        <textarea id="obj3_deskripsi" name="obj3_deskripsi" rows="4" class="form-control" placeholder="Deskripsi objective">{{ $sambutan->obj3_deskripsi }}</textarea>
-                                    </div>
-                                </div>
+                            <div class="form-group">
+                                <label for="obj3_title" class="font-weight-bold">Judul</label>
+                                <input type="text" id="obj3_title" name="obj3_title" class="form-control" placeholder="Judul objective" value="{{ $sambutan->obj3_title }}" onchange="updateObjTitle(3)">
+                            </div>
+                            <div class="form-group">
+                                <label for="obj3_deskripsi" class="font-weight-bold">Deskripsi</label>
+                                <textarea id="obj3_deskripsi" name="obj3_deskripsi" rows="4" class="form-control" placeholder="Deskripsi objective">{{ $sambutan->obj3_deskripsi }}</textarea>
                             </div>
                         </div>
                     </div>
@@ -238,30 +157,13 @@
                             <h5 class="m-0">Objective 4: <strong id="obj4_title_display">{{ $sambutan->obj4_title }}</strong></h5>
                         </div>
                         <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <label for="obj4_image" class="font-weight-bold">Foto</label>
-                                    <div class="text-center mb-3">
-                                        <img src="{{ asset($sambutan->obj4_image) }}" alt="Objective 4" class="img-fluid rounded" style="max-height: 200px; object-fit: cover; width: 100%;">
-                                    </div>
-                                    <button type="button" class="btn btn-danger btn-block mb-2" onclick="document.getElementById('obj4_image').click()">
-                                        <i class="fas fa-cloud-upload-alt"></i> Pilih Gambar
-                                    </button>
-                                    <div class="custom-file-input" style="display:none;">
-                                        <input type="file" class="form-control-file" id="obj4_image" name="obj4_image" accept="image/*" onchange="previewFile(this, 'obj4Preview')">
-                                    </div>
-                                    <div id="obj4Preview" class="mt-3"></div>
-                                </div>
-                                <div class="col-md-8">
-                                    <div class="form-group">
-                                        <label for="obj4_title" class="font-weight-bold">Judul</label>
-                                        <input type="text" id="obj4_title" name="obj4_title" class="form-control" placeholder="Judul objective" value="{{ $sambutan->obj4_title }}" onchange="updateObjTitle(4)">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="obj4_deskripsi" class="font-weight-bold">Deskripsi</label>
-                                        <textarea id="obj4_deskripsi" name="obj4_deskripsi" rows="4" class="form-control" placeholder="Deskripsi objective">{{ $sambutan->obj4_deskripsi }}</textarea>
-                                    </div>
-                                </div>
+                            <div class="form-group">
+                                <label for="obj4_title" class="font-weight-bold">Judul</label>
+                                <input type="text" id="obj4_title" name="obj4_title" class="form-control" placeholder="Judul objective" value="{{ $sambutan->obj4_title }}" onchange="updateObjTitle(4)">
+                            </div>
+                            <div class="form-group">
+                                <label for="obj4_deskripsi" class="font-weight-bold">Deskripsi</label>
+                                <textarea id="obj4_deskripsi" name="obj4_deskripsi" rows="4" class="form-control" placeholder="Deskripsi objective">{{ $sambutan->obj4_deskripsi }}</textarea>
                             </div>
                         </div>
                     </div>

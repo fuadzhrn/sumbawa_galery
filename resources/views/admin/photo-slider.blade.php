@@ -64,19 +64,7 @@
     </div>
 
     <!-- Stats Card -->
-    <div class="col-md-6">
-        <div class="card bg-info">
-            <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <h6 class="text-white mb-0">Total Foto Slider</h6>
-                        <h2 class="text-white mt-2">{{ $sliders->count() }}</h2>
-                    </div>
-                    <i class="fas fa-images text-white" style="font-size: 3rem; opacity: 0.3;"></i>
-                </div>
-            </div>
-        </div>
-    </div>
+    
 </div>
 
 <!-- Gallery -->

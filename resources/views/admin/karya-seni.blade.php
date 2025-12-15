@@ -163,6 +163,11 @@
                     <div class="col-md-6 mb-3">
                         <div class="text-center">
                             <img id="modal-preview" src="" alt="Preview" class="img-fluid rounded" style="max-height: 300px; object-fit: cover;">
+                            <div id="modal-youtube-link" style="display: none; margin-top: 10px;">
+                                <a id="youtube-link-url" href="" target="_blank" class="btn btn-danger btn-sm">
+                                    <i class="fab fa-youtube"></i> Buka di YouTube
+                                </a>
+                            </div>
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -298,10 +303,17 @@ document.querySelectorAll('.btn-detail-modal').forEach(button => {
                 // Set preview image
                 if (data.media_type === 'image' && data.media_path) {
                     document.getElementById('modal-preview').src = data.media_path;
+                    document.getElementById('modal-youtube-link').style.display = 'none';
+                } else if (data.media_type === 'youtube_link' && data.media_path) {
+                    document.getElementById('modal-preview').src = "{{ asset('assets/images/placeholder.jpg') }}";
+                    document.getElementById('youtube-link-url').href = data.media_path;
+                    document.getElementById('modal-youtube-link').style.display = 'block';
                 } else if (data.thumbnail) {
                     document.getElementById('modal-preview').src = data.thumbnail;
+                    document.getElementById('modal-youtube-link').style.display = 'none';
                 } else {
                     document.getElementById('modal-preview').src = "{{ asset('assets/images/placeholder.jpg') }}";
+                    document.getElementById('modal-youtube-link').style.display = 'none';
                 }
                 
                 $('#detailKaryaModal').modal('show');

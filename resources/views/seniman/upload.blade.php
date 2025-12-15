@@ -223,107 +223,92 @@
         </div>
     </div>
 </div>
-@endsection
 
-@section('extra-js')
-    <script>
-        function updateMediaInput() {
-            const mediaType = document.getElementById('media_type').value;
-            const uploadMethod = document.querySelector('input[name="upload_method"]:checked');
-            const fileInputGroup = document.getElementById('fileInputGroup');
-            const urlInputGroup = document.getElementById('urlInputGroup');
-            const fileHelp = document.getElementById('fileHelp');
-            const urlHelp = document.getElementById('urlHelp');
-            const fileRequired = document.getElementById('fileRequired');
-            const urlRequired = document.getElementById('urlRequired');
-            const mediaFile = document.getElementById('media_file');
-            const mediaUrl = document.getElementById('media_url');
+<script>
+    function updateMediaInput() {
+        const mediaType = document.getElementById('media_type').value;
+        const uploadMethod = document.querySelector('input[name="upload_method"]:checked');
+        const fileInputGroup = document.getElementById('fileInputGroup');
+        const urlInputGroup = document.getElementById('urlInputGroup');
+        const fileHelp = document.getElementById('fileHelp');
+        const urlHelp = document.getElementById('urlHelp');
+        const fileRequired = document.getElementById('fileRequired');
+        const urlRequired = document.getElementById('urlRequired');
+        const mediaFile = document.getElementById('media_file');
+        const mediaUrl = document.getElementById('media_url');
+        const uploadFileBtn = document.querySelector('input[name="upload_method"][value="file"]');
+        const uploadUrlBtn = document.querySelector('input[name="upload_method"][value="url"]');
 
-            // Reset
-            fileInputGroup.style.display = 'none';
-            urlInputGroup.style.display = 'none';
-            fileHelp.style.display = 'none';
-            urlHelp.style.display = 'none';
+        // Reset
+        fileInputGroup.style.display = 'none';
+        urlInputGroup.style.display = 'none';
+        fileHelp.style.display = 'none';
+        urlHelp.style.display = 'none';
 
-            if (!mediaType) return;
+        if (!mediaType) return;
 
-            let method = uploadMethod ? uploadMethod.value : 'file';
+        let method = uploadMethod ? uploadMethod.value : 'file';
 
-            // YouTube link only supports URL
+        // YouTube link only supports URL
+        if (mediaType === 'youtube_link') {
+            method = 'url';
+            uploadUrlBtn.checked = true;
+            uploadFileBtn.disabled = true;
+            uploadUrlBtn.disabled = false;
+        } else {
+            uploadFileBtn.disabled = false;
+        }
+
+        if (method === 'file') {
+            fileInputGroup.style.display = 'block';
+            fileHelp.style.display = 'block';
+            mediaFile.required = true;
+            mediaUrl.required = false;
+            mediaUrl.removeAttribute('required');
+
+            if (mediaType === 'image') {
+                document.querySelector('label[for="media_file"]').textContent = 'Upload Gambar';
+                fileHelp.innerHTML = '<strong>Format yang didukung:</strong> JPG, PNG (max 5MB)';
+                mediaFile.accept = 'image/*';
+            } else if (mediaType === 'video') {
+                document.querySelector('label[for="media_file"]').textContent = 'Upload Video';
+                fileHelp.innerHTML = '<strong>Format yang didukung:</strong> MP4 (max 100MB)';
+                mediaFile.accept = 'video/*';
+            }
+        } else {
+            urlInputGroup.style.display = 'block';
+            urlHelp.style.display = 'block';
+            mediaFile.required = false;
+            mediaUrl.required = true;
+
             if (mediaType === 'youtube_link') {
-                method = 'url';
-                document.querySelector('input[name="upload_method"][value="url"]').checked = true;
-                document.querySelector('input[name="upload_method"][value="file"]').disabled = true;
-            } else {
-                document.querySelector('input[name="upload_method"][value="file"]').disabled = false;
-            }
-
-            if (method === 'file') {
-                fileInputGroup.style.display = 'block';
-                fileHelp.style.display = 'block';
-                mediaFile.required = true;
-                mediaUrl.required = false;
-
-                if (mediaType === 'image') {
-                    document.querySelector('label[for="media_file"]').textContent = 'Upload Gambar';
-                    fileHelp.textContent = 'Format yang didukung: JPG, PNG (max 5MB)';
-                    mediaFile.accept = 'image/*';
-                } else if (mediaType === 'video') {
-                    document.querySelector('label[for="media_file"]').textContent = 'Upload Video';
-                    fileHelp.textContent = 'Format yang didukung: MP4 (max 100MB)';
-                    mediaFile.accept = 'video/*';
-                }
-            } else {
-                urlInputGroup.style.display = 'block';
-                urlHelp.style.display = 'block';
-                mediaFile.required = false;
-                mediaUrl.required = true;
-
-                if (mediaType === 'youtube_link') {
-                    urlHelp.textContent = 'Contoh: https://www.youtube.com/watch?v=dQw4w9WgXcQ';
-                } else if (mediaType === 'image') {
-                    urlHelp.textContent = 'Paste URL lengkap gambar dari internet';
-                } else if (mediaType === 'video') {
-                    urlHelp.textContent = 'Paste URL lengkap video dari internet';
-                }
+                urlHelp.innerHTML = '<strong>Contoh YouTube:</strong> https://www.youtube.com/watch?v=dQw4w9WgXcQ';
+            } else if (mediaType === 'image') {
+                urlHelp.innerHTML = '<strong>Contoh:</strong> Paste URL lengkap gambar dari internet';
+            } else if (mediaType === 'video') {
+                urlHelp.innerHTML = '<strong>Contoh:</strong> Paste URL lengkap video dari internet';
             }
         }
+    }
 
-        function previewFile(input) {
-            const preview = document.getElementById('filePreview');
-            preview.innerHTML = '';
+    function previewFile(input) {
+        const preview = document.getElementById('filePreview');
+        preview.innerHTML = '';
 
-            if (input.files && input.files[0]) {
-                const file = input.files[0];
-                const mediaType = document.getElementById('media_type').value;
+        if (input.files && input.files[0]) {
+            const file = input.files[0];
+            const mediaType = document.getElementById('media_type').value;
 
-                // Show file info
-                const fileInfo = document.createElement('div');
-                fileInfo.style.marginTop = '10px';
-                fileInfo.style.fontSize = '13px';
-                fileInfo.style.color = '#666';
-                fileInfo.innerHTML = `<strong>File:</strong> ${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)`;
-                preview.appendChild(fileInfo);
+            // Show file info
+            const fileInfo = document.createElement('div');
+            fileInfo.style.marginTop = '10px';
+            fileInfo.style.fontSize = '13px';
+            fileInfo.style.color = '#666';
+            fileInfo.innerHTML = `<strong>File:</strong> ${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)`;
+            preview.appendChild(fileInfo);
 
-                // Show preview if image
-                if (mediaType === 'image') {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        const img = document.createElement('img');
-                        img.src = e.target.result;
-                        preview.appendChild(img);
-                    };
-                    reader.readAsDataURL(file);
-                }
-            }
-        }
-
-        function previewThumbnail(input) {
-            const preview = document.getElementById('thumbnailPreview');
-            preview.innerHTML = '';
-
-            if (input.files && input.files[0]) {
-                const file = input.files[0];
+            // Show preview if image
+            if (mediaType === 'image') {
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     const img = document.createElement('img');
@@ -333,8 +318,26 @@
                 reader.readAsDataURL(file);
             }
         }
+    }
 
-        // Drag and drop
+    function previewThumbnail(input) {
+        const preview = document.getElementById('thumbnailPreview');
+        preview.innerHTML = '';
+
+        if (input.files && input.files[0]) {
+            const file = input.files[0];
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                preview.appendChild(img);
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+
+    // Drag and drop
+    document.addEventListener('DOMContentLoaded', function() {
         const fileInputs = document.querySelectorAll('.file-input-wrapper');
         fileInputs.forEach(wrapper => {
             const label = wrapper.querySelector('.file-input-label');
@@ -362,8 +365,10 @@
         });
 
         // Initialize
-        document.addEventListener('DOMContentLoaded', function() {
-            updateMediaInput();
-        });
-    </script>
+        updateMediaInput();
+        
+        console.log('Upload form initialized');
+    });
+</script>
+
 @endsection
