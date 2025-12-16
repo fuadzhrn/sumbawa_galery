@@ -34,14 +34,15 @@
             <div class="card-content">
                 <h3 class="card-title">{{ $karya->judul }}</h3>
                 <p class="card-artist">{{ $karya->user->name }}</p>
-                <button class="btn-biografi" 
-                    data-karya-id="{{ $karya->id }}"
-                    data-seniman-id="{{ $karya->user->seniman?->id }}"
-                    data-nama="{{ $karya->user->name }}" 
-                    data-kategori="{{ $karya->kategori->nama }}"
-                    data-foto="{{ $karya->user->seniman?->foto ? asset($karya->user->seniman->foto) : asset('assets/images/img1.png') }}">
-                    Biografi
-                </button>
+                @if($karya->user->seniman)
+                    <a href="{{ route('seniman.show', $karya->user->seniman->id) }}" class="btn-biografi">
+                        Biografi
+                    </a>
+                @else
+                    <button class="btn-biografi" disabled style="opacity: 0.5; cursor: not-allowed;">
+                        Biografi
+                    </button>
+                @endif
             </div>
                 </div>
         @empty
@@ -51,82 +52,17 @@
         @endforelse
     </div>
 </section>
-<div id="biographyModal" class="modal">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h2>Profil Seniman</h2>
-            <button class="modal-close" onclick="closeBiographyModal()">&times;</button>
-        </div>
-        <div class="seniman-info">
-            <img id="senimanFoto" src="{{ asset('assets/images/img1.png') }}" alt="Seniman" class="seniman-foto">
-            <div class="seniman-nama" id="senimanNama"></div>
-            <div class="seniman-kategori"><strong>Kategori:</strong> <span id="senimanKategori"></span></div>
-            
-            <div class="biografi-section">
-                <div class="biografi-title">Biografi</div>
-                <p class="biografi-text" id="senimanBiografi"></p>
-            </div>
-
-            <div class="karya-section">
-                <div class="karya-title">Karya Seni</div>
-                <ul class="karya-list" id="karyaList">
-                </ul>
-            </div>
-        </div>
-    </div>
-</div>
 
 @endsection
 
 @section('extra-js')
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Biografi button listeners
-    document.querySelectorAll('.btn-biografi').forEach(button => {
-        button.addEventListener('click', function() {
-            const senimanId = this.getAttribute('data-seniman-id');
-            const karyaId = this.getAttribute('data-karya-id');
-
-            if (!senimanId) {
-                alert('Seniman tidak ditemukan');
-                return;
-            }
-
-            fetch(`/api/seniman/${senimanId}/profile`)
-                .then(response => response.json())
-                .then(data => {
-                    document.getElementById('senimanNama').textContent = data.nama || 'Nama tidak tersedia';
-                    document.getElementById('senimanKategori').textContent = data.kategori || 'Kategori tidak tersedia';
-                    document.getElementById('senimanFoto').src = data.foto || '{{ asset("assets/images/img1.png") }}';
-                    document.getElementById('senimanBiografi').textContent = data.biografi || 'Deskripsi tidak tersedia';
-
-                    const karyaList = document.getElementById('karyaList');
-                    karyaList.innerHTML = '';
-                    
-                    if (data.karya && data.karya.length > 0) {
-                        data.karya.forEach(k => {
-                            const li = document.createElement('li');
-                            li.className = 'karya-item';
-                            li.innerHTML = `
-                                <a href="/karya/${k.id}" class="karya-link">${k.judul}</a>
-                                <div class="karya-kategori">${k.kategori}</div>
-                            `;
-                            karyaList.appendChild(li);
-                        });
-                    } else {
-                        const li = document.createElement('li');
-                        li.className = 'no-karya';
-                        li.textContent = 'Belum ada karya lainnya';
-                        karyaList.appendChild(li);
-                    }
-
-                    document.getElementById('biographyModal').style.display = 'block';
-                })
-                .catch(error => {
-                    console.error('Error fetching seniman:', error);
-                    alert('Gagal memuat data seniman');
-                });
-
+    // Increment views when page loads
+    const karyaSeniIds = document.querySelectorAll('[data-karya-id-increment]');
+    karyaSeniIds.forEach(element => {
+        const karyaId = element.getAttribute('data-karya-id-increment');
+        if (karyaId) {
             fetch(`/karya-seni/${karyaId}/increment-views`, {
                 method: 'POST',
                 headers: {
@@ -134,17 +70,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             })
             .catch(error => console.error('Error incrementing views:', error));
-        });
-    });
-
-    window.closeBiographyModal = function() {
-        document.getElementById('biographyModal').style.display = 'none';
-    };
-
-    window.addEventListener('click', function(event) {
-        const modal = document.getElementById('biographyModal');
-        if (event.target === modal) {
-            modal.style.display = 'none';
         }
     });
 });
