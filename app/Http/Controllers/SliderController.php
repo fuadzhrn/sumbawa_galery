@@ -150,9 +150,25 @@ class SliderController extends Controller
             // Delete record
             $slider->delete();
 
+            // For AJAX requests, return JSON response
+            if (request()->wantsJson() || request()->ajax()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Foto slider berhasil dihapus!'
+                ], 200);
+            }
+
             return redirect()->route('admin.photo-slider')
                 ->with('success', 'Foto slider berhasil dihapus! Total: ' . SliderImage::count() . ' foto');
         } catch (\Exception $e) {
+            // For AJAX requests, return JSON error response
+            if (request()->wantsJson() || request()->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Gagal menghapus foto: ' . $e->getMessage()
+                ], 500);
+            }
+
             return redirect()->route('admin.photo-slider')
                 ->with('error', 'Gagal menghapus foto: ' . $e->getMessage());
         }
