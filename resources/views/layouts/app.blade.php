@@ -16,6 +16,13 @@
         <!-- HEADER -->
         <header class="header">
             <div class="header-content">
+                <button id="sidebarToggle" class="sidebar-toggle" aria-label="Toggle Sidebar" title="Toggle Menu">
+                    <span class="hamburger-icon">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </span>
+                </button>
                 <h1 class="header-title">Aplikasi Portal Karya Seniman Budaya Sumbawa</h1>
                 <div class="header-user-section">
                     @if(Auth::check())

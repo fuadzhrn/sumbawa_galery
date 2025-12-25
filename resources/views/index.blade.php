@@ -80,33 +80,10 @@
             border-left: none;
         }
 
-        @media (max-width: 768px) {
+        /* HIDE KATEGORI SIDEBAR IN MOBILE - WILL BE IN MAIN SIDEBAR */
+        @media (max-width: 991px) {
             .kategori-sidebar {
-                position: relative;
-                width: 100%;
-                top: auto;
-                left: auto;
-                border-right: none;
-                border-bottom: 1px solid #ddd;
-                max-height: none;
-            }
-
-            .kategori-list {
-                display: flex;
-                flex-wrap: wrap;
-            }
-
-            .kategori-item {
-                flex: 1;
-                min-width: 80px;
-                border-bottom: none;
-            }
-
-            .kategori-link {
-                text-align: center;
-                padding: 0.75rem;
-                border: 1px solid #ddd;
-                border-radius: 4px;
+                display: none;
             }
         }
     </style>

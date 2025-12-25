@@ -54,11 +54,11 @@
                 <div style="display: grid; grid-template-columns: 1fr; gap: 1.5rem;">
                     <div>
                         <h4 style="font-size: 1rem; color: var(--primary-blue); font-weight: 700; margin: 0 0 0.75rem 0;">Visi</h4>
-                        <p style="font-size: 0.95rem; line-height: 1.6; color: var(--text-dark); margin: 0;">{{ $sambutan->visi_text }}</p>
+                        <p style="font-size: 0.95rem; line-height: 1.6; color: var(--text-dark); margin: 0; text-align: justify;">{{ $sambutan->visi_text }}</p>
                     </div>
                     <div>
                         <h4 style="font-size: 1rem; color: var(--primary-blue); font-weight: 700; margin: 0 0 0.75rem 0;">Misi</h4>
-                        <ul style="font-size: 0.95rem; line-height: 1.6; color: var(--text-dark); margin: 0; padding-left: 1.5rem;">
+                        <ul style="font-size: 0.95rem; line-height: 1.6; color: var(--text-dark); margin: 0; padding-left: 1.5rem; text-align: justify;">
                             @foreach(explode("\n", $sambutan->misi_text) as $item)
                                 @if(trim($item))
                                     <li style="margin-bottom: 0.75rem;">{{ trim(preg_replace('/^\d+\.\s*/', '', $item)) }}</li>
@@ -76,19 +76,19 @@
                     <div>
                         
                         <h4 style="font-size: 1.1rem; color: var(--primary-blue); font-weight: 700; margin: 0 0 0.75rem 0;">{{ $sambutan->obj1_title }}</h4>
-                        <p style="font-size: 0.9rem; line-height: 1.5; color: var(--text-dark); margin: 0;">{{ $sambutan->obj1_deskripsi }}</p>
+                        <p style="font-size: 0.9rem; line-height: 1.5; color: var(--text-dark); margin: 0; text-align: justify; word-wrap: break-word; word-break: break-word;">{{ $sambutan->obj1_deskripsi }}</p>
                     </div>
                     <div>
                         <h4 style="font-size: 1.1rem; color: var(--primary-blue); font-weight: 700; margin: 0 0 0.75rem 0;">{{ $sambutan->obj2_title }}</h4>
-                        <p style="font-size: 0.9rem; line-height: 1.5; color: var(--text-dark); margin: 0;">{{ $sambutan->obj2_deskripsi }}</p>
+                        <p style="font-size: 0.9rem; line-height: 1.5; color: var(--text-dark); margin: 0; text-align: justify; word-wrap: break-word; word-break: break-word;">{{ $sambutan->obj2_deskripsi }}</p>
                     </div>
                     <div>
                         <h4 style="font-size: 1.1rem; color: var(--primary-blue); font-weight: 700; margin: 0 0 0.75rem 0;">{{ $sambutan->obj3_title }}</h4>
-                        <p style="font-size: 0.9rem; line-height: 1.5; color: var(--text-dark); margin: 0;">{{ $sambutan->obj3_deskripsi }}</p>
+                        <p style="font-size: 0.9rem; line-height: 1.5; color: var(--text-dark); margin: 0; text-align: justify; word-wrap: break-word; word-break: break-word;">{{ $sambutan->obj3_deskripsi }}</p>
                     </div>
                     <div>
                         <h4 style="font-size: 1.1rem; color: var(--primary-blue); font-weight: 700; margin: 0 0 0.75rem 0;">{{ $sambutan->obj4_title }}</h4>
-                        <p style="font-size: 0.9rem; line-height: 1.5; color: var(--text-dark); margin: 0;">{{ $sambutan->obj4_deskripsi }}</p>
+                        <p style="font-size: 0.9rem; line-height: 1.5; color: var(--text-dark); margin: 0; text-align: justify; word-wrap: break-word; word-break: break-word;">{{ $sambutan->obj4_deskripsi }}</p>
                     </div>
                 </div>
             </div>

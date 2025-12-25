@@ -11,21 +11,21 @@
 
     .seniman-profile-header {
         display: flex;
-        gap: 3rem;
-        margin-bottom: 3rem;
+        gap: 2rem;
+        margin-bottom: 2.5rem;
         background: white;
-        padding: 2rem;
+        padding: 1.5rem;
         border-radius: 8px;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
     }
 
     .seniman-profile-photo {
-        flex: 0 0 300px;
+        flex: 0 0 220px;
     }
 
     .seniman-profile-photo img {
         width: 100%;
-        height: 300px;
+        height: 220px;
         object-fit: cover;
         border-radius: 8px;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -80,8 +80,8 @@
 
     .karya-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-        gap: 2rem;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 1.25rem;
     }
 
     .karya-card {
@@ -99,7 +99,7 @@
 
     .karya-card-image {
         width: 100%;
-        height: 200px;
+        height: 130px;
         overflow: hidden;
         position: relative;
     }
@@ -116,13 +116,13 @@
     }
 
     .karya-card-body {
-        padding: 1.5rem;
+        padding: 0.75rem;
     }
 
     .karya-card-title {
-        font-size: 1.1rem;
+        font-size: 0.95rem;
         color: var(--primary-blue);
-        margin-bottom: 0.5rem;
+        margin-bottom: 0.3rem;
         font-weight: 600;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -130,13 +130,13 @@
     }
 
     .karya-card-category {
-        font-size: 0.85rem;
+        font-size: 0.75rem;
         color: var(--text-light);
-        margin-bottom: 1rem;
+        margin-bottom: 0.5rem;
         display: inline-block;
         background-color: #f0f0f0;
-        padding: 0.25rem 0.75rem;
-        border-radius: 4px;
+        padding: 0.15rem 0.5rem;
+        border-radius: 3px;
     }
 
     .karya-card-footer {

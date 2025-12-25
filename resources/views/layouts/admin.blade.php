@@ -48,6 +48,164 @@
             background-color: var(--primary-color);
             color: white;
         }
+
+        /* Mobile Toggle Button */
+        #mobile-sidebar-toggle {
+            color: white;
+            font-size: 1.25rem;
+        }
+
+        #mobile-sidebar-toggle:hover {
+            color: #e0e0e0;
+        }
+
+        /* MOBILE RESPONSIVE - SIDEBAR TOGGLE */
+        @media (max-width: 991px) {
+            /* Hide original AdminLTE sidebar on mobile */
+            .main-sidebar {
+                display: none !important;
+            }
+
+            /* Show mobile sidebar - overlay style */
+            .mobile-sidebar {
+                position: fixed;
+                left: 0;
+                top: 57px;
+                width: 250px;
+                height: calc(100vh - 57px);
+                z-index: 900;
+                background-color: #222d32;
+                transition: left 0.3s ease;
+                padding: 1rem 0;
+                overflow-y: auto;
+                display: block;
+                border-right: 1px solid rgba(0, 0, 0, 0.1);
+            }
+
+            /* Hide mobile sidebar when collapsed */
+            body.sidebar-collapse .mobile-sidebar {
+                left: -250px;
+            }
+
+            /* Overlay backdrop when sidebar open */
+            .mobile-sidebar::before {
+                content: '';
+                position: fixed;
+                top: 57px;
+                left: 250px;
+                right: 0;
+                bottom: 0;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 899;
+            }
+
+            body.sidebar-collapse .mobile-sidebar::before {
+                display: none;
+            }
+
+            /* TABLE RESPONSIVENESS - Horizontal Scroll */
+            .table-responsive {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                display: block;
+            }
+
+            .table {
+                min-width: 100%;
+                margin-bottom: 1rem;
+                font-size: 0.9rem;
+            }
+
+            .table thead th {
+                padding: 0.5rem;
+                font-size: 0.85rem;
+                white-space: nowrap;
+            }
+
+            .table tbody td {
+                padding: 0.5rem;
+                white-space: nowrap;
+            }
+
+            .table tbody tr:nth-child(odd) {
+                background-color: rgba(0, 0, 0, 0.02);
+            }
+
+            /* CONTENT OPTIMIZATION */
+            .content-header {
+                padding: 0.5rem 1rem;
+            }
+
+            .content-header h1 {
+                font-size: 1.25rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .card {
+                margin-bottom: 1rem;
+                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            }
+
+            .card-header {
+                padding: 0.75rem;
+            }
+
+            .card-body {
+                padding: 1rem;
+            }
+
+            /* FORM OPTIMIZATION */
+            .form-group {
+                margin-bottom: 1rem;
+            }
+
+            .form-control,
+            .form-select {
+                font-size: 1rem;
+                padding: 0.5rem;
+            }
+
+            /* BUTTON OPTIMIZATION */
+            .btn {
+                padding: 0.5rem 1rem;
+                font-size: 0.9rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .btn-group {
+                flex-wrap: wrap;
+                gap: 0.5rem;
+            }
+
+            /* BREADCRUMB MOBILE */
+            .breadcrumb {
+                font-size: 0.85rem;
+                padding: 0.5rem 0;
+                margin-bottom: 0.5rem;
+            }
+
+            /* DROPDOWN MENU */
+            .dropdown-menu {
+                font-size: 0.9rem;
+                min-width: 150px;
+            }
+        }
+
+        /* DESKTOP - Show original sidebar, reset to AdminLTE defaults */
+        @media (min-width: 992px) {
+            .main-sidebar {
+                display: block !important;
+            }
+
+            .mobile-sidebar {
+                display: none !important;
+            }
+
+            .mobile-sidebar::before {
+                display: none !important;
+            }
+        }
+
     </style>
     
     @yield('extra_css')
@@ -59,7 +217,11 @@
     <nav class="main-header navbar navbar-expand navbar-white navbar-light">
         <!-- Left navbar links -->
         <ul class="navbar-nav">
-            
+            <li class="nav-item d-md-none">
+                <a class="nav-link" href="#" id="mobile-sidebar-toggle" role="button">
+                    <i class="fas fa-bars"></i>
+                </a>
+            </li>
         </ul>
 
         <!-- Right navbar links -->
@@ -86,7 +248,41 @@
     </nav>
     <!-- /.navbar -->
 
-    <!-- Main Sidebar Container -->
+    <!-- MOBILE SIDEBAR - HANYA DI MOBILE -->
+    <aside class="mobile-sidebar">
+        <div style="padding: 1rem 0.5rem;">
+            <a href="{{ route('admin.dashboard') }}" class="nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
+                <i class="nav-icon fas fa-tachometer-alt"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="{{ route('admin.photo-slider') }}" class="nav-link {{ request()->routeIs('admin.photo-slider') ? 'active' : '' }}">
+                <i class="nav-icon fas fa-images"></i>
+                <span>Photo Slider</span>
+            </a>
+            <a href="{{ route('admin.kategori') }}" class="nav-link {{ request()->routeIs('admin.kategori') ? 'active' : '' }}">
+                <i class="nav-icon fas fa-list"></i>
+                <span>Kategori</span>
+            </a>
+            <a href="{{ route('admin.seniman') }}" class="nav-link {{ request()->routeIs('admin.seniman') ? 'active' : '' }}">
+                <i class="nav-icon fas fa-users"></i>
+                <span>Seniman</span>
+            </a>
+            <a href="{{ route('admin.karya-seni') }}" class="nav-link {{ request()->routeIs('admin.karya-seni') ? 'active' : '' }}">
+                <i class="nav-icon fas fa-palette"></i>
+                <span>Karya Seni</span>
+            </a>
+            <a href="{{ route('sambutan.edit') }}" class="nav-link {{ request()->routeIs('sambutan.edit') ? 'active' : '' }}">
+                <i class="nav-icon fas fa-quote-left"></i>
+                <span>Kata Sambutan</span>
+            </a>
+            <a href="{{ route('logout') }}" class="nav-link" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                <i class="nav-icon fas fa-sign-out-alt"></i>
+                <span>Logout</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- Main Sidebar Container (Desktop) -->
     <aside class="main-sidebar sidebar-dark-primary elevation-4">
         <!-- Brand Logo -->
         <a href="{{ route('admin.dashboard') }}" class="brand-link">
@@ -250,6 +446,30 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/3.2.0/js/adminlte.min.js"></script>
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
 <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/3.2.0/js/pages/dashboard.js"></script> -->
+
+<script>
+    $(document).ready(function() {
+        $('#mobile-sidebar-toggle').on('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            $('body').toggleClass('sidebar-collapse');
+            console.log('Toggle clicked, sidebar-collapse:', $('body').hasClass('sidebar-collapse'));
+        });
+
+        // Close sidebar when clicking on a nav link in mobile sidebar
+        $('.mobile-sidebar a.nav-link').on('click', function() {
+            if ($(window).width() <= 991) {
+                $('body').addClass('sidebar-collapse');
+            }
+        });
+
+        // Close sidebar when clicking on logout form
+        $('#logout-form').on('click', function() {
+            $('body').addClass('sidebar-collapse');
+        });
+    });
+</script>
 
 @yield('extra_js')
 </body>
