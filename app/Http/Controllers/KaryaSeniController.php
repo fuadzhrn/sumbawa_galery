@@ -14,7 +14,9 @@ class KaryaSeniController extends Controller
      */
     public function index()
     {
-        $karyaSeni = KaryaSeni::with(['user', 'kategori'])->paginate(5);
+        $karyaSeni = KaryaSeni::with(['user', 'kategori'])
+            ->orderBy('created_at', 'desc') // Karya terbaru di atas
+            ->paginate(5);
         return view('admin.karya-seni', compact('karyaSeni'));
     }
 

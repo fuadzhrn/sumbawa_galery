@@ -99,5 +99,7 @@ Route::middleware(['auth', 'seniman'])->group(function () {
 
 // Dynamic Kategori Routes (MUST BE LAST - catches all remaining slugs)
 Route::get('/karya/{karyaSeni}', [KaryaSeniController::class, 'show'])->name('karya.show');
+Route::get('/karya/{karyaSeni}/biography', [SenimanDetailController::class, 'biographyWithKarya'])->name('karya.biography');
+Route::get('/seniman/{seniman}/biography', [SenimanDetailController::class, 'biography'])->name('seniman.biography');
 Route::get('/seniman/{seniman}', [SenimanDetailController::class, 'show'])->name('seniman.show');
 Route::get('/{slug}', [KategoriDetailController::class, 'show'])->name('kategori.show');

@@ -30,6 +30,12 @@
         
         .sidebar {
             background-color: #1f2937;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+        
+        .sidebar::-webkit-scrollbar {
+            display: none;
         }
         
         .sidebar .nav-link.active {

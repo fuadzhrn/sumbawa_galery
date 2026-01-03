@@ -11,8 +11,24 @@ document.addEventListener('DOMContentLoaded', function() {
     initSlider();
     initNavigation();
     initSidebarToggle();
+    
+    // Initialize nav toggle immediately, then retry if needed
     initNavToggle();
+    
+    // Retry restore after a bit more time to ensure all elements are ready
+    setTimeout(() => {
+        console.log('[DOMContentLoaded] Retrying to restore menus...');
+        restoreOpenedMenus();
+    }, 200);
+    
     console.log('[DOMContentLoaded] All components initialized!');
+});
+
+// Ensure menu state is saved before navigating away
+window.addEventListener('beforeunload', function() {
+    console.log('[beforeunload] Page is unloading, menu state should be saved');
+    // State should already be saved by toggle click handlers
+    // This is just for confirmation
 });
 
 /**
@@ -314,14 +330,51 @@ function fixActiveNavigation() {
 }
 
 /**
+ * Restore opened menus from localStorage
+ */
+function restoreOpenedMenus() {
+    const savedOpenedMenus = localStorage.getItem('openedMenus');
+    const openedMenus = savedOpenedMenus ? JSON.parse(savedOpenedMenus) : [];
+    console.log('[restoreOpenedMenus] localStorage value:', savedOpenedMenus);
+    console.log('[restoreOpenedMenus] Restoring opened menus:', openedMenus);
+    
+    let restoredCount = 0;
+    openedMenus.forEach(toggleId => {
+        console.log(`[restoreOpenedMenus] Looking for element with id: ${toggleId}`);
+        const submenu = document.getElementById(toggleId);
+        const button = document.querySelector(`[data-toggle="${toggleId}"]`);
+        console.log(`[restoreOpenedMenus] Submenu found:`, !!submenu);
+        console.log(`[restoreOpenedMenus] Button found:`, !!button);
+        
+        if (submenu && button) {
+            submenu.classList.add('show');
+            button.setAttribute('aria-expanded', 'true');
+            console.log(`[restoreOpenedMenus] ✓ Restored menu: ${toggleId}`);
+            restoredCount++;
+        }
+    });
+    
+    console.log(`[restoreOpenedMenus] Successfully restored ${restoredCount} menus out of ${openedMenus.length}`);
+}
+
+/**
  * Initialize Nav Toggle for Kategori Submenu
  */
 function initNavToggle() {
     const toggleButtons = document.querySelectorAll('.nav-toggle');
     console.log('[initNavToggle] Found toggle buttons:', toggleButtons.length);
     
+    if (toggleButtons.length === 0) {
+        console.log('[initNavToggle] No toggle buttons found, exiting');
+        return;
+    }
+    
+    // Restore menus on first init
+    restoreOpenedMenus();
+    
     toggleButtons.forEach((button, index) => {
-        console.log(`[initNavToggle] Button ${index}:`, button);
+        console.log(`[initNavToggle] Attaching click handler to button ${index}:`, button);
+        
         button.addEventListener('click', function(e) {
             e.preventDefault();
             e.stopPropagation();
@@ -330,15 +383,38 @@ function initNavToggle() {
             const submenu = document.getElementById(toggleId);
             const isExpanded = this.getAttribute('aria-expanded') === 'true';
             
-            console.log(`[Toggle Click] toggleId: ${toggleId}, submenu found: ${!!submenu}, isExpanded: ${isExpanded}`);
+            console.log(`[Toggle Click] toggleId: ${toggleId}`);
+            console.log(`[Toggle Click] submenu found: ${!!submenu}`);
+            console.log(`[Toggle Click] isExpanded: ${isExpanded}`);
             
             if (submenu) {
-                // Toggle submenu visibility - ONLY untuk submenu yang di-klik
+                // Toggle submenu visibility
                 submenu.classList.toggle('show');
                 
                 // Update aria-expanded attribute
-                this.setAttribute('aria-expanded', !isExpanded);
+                const newExpanded = !isExpanded;
+                this.setAttribute('aria-expanded', newExpanded);
+                
+                console.log(`[Toggle Click] New expanded state: ${newExpanded}`);
+                
+                // Save state to localStorage
+                let currentOpenedMenus = JSON.parse(localStorage.getItem('openedMenus')) || [];
+                
+                if (newExpanded) {
+                    // Add to opened menus if not already there
+                    if (!currentOpenedMenus.includes(toggleId)) {
+                        currentOpenedMenus.push(toggleId);
+                    }
+                } else {
+                    // Remove from opened menus
+                    currentOpenedMenus = currentOpenedMenus.filter(id => id !== toggleId);
+                }
+                
+                localStorage.setItem('openedMenus', JSON.stringify(currentOpenedMenus));
+                console.log('[Toggle Click] Updated localStorage:', currentOpenedMenus);
             }
         });
     });
+    
+    console.log('[initNavToggle] Initialization complete!');
 }

@@ -33,9 +33,8 @@
             </div>
             <div class="card-content">
                 <h3 class="card-title">{{ $karya->judul }}</h3>
-                <p class="card-artist">{{ $karya->user->name }}</p>
                 @if($karya->user->seniman)
-                    <a href="{{ route('seniman.show', $karya->user->seniman->id) }}" class="btn-biografi">
+                    <a href="{{ route('karya.biography', $karya->id) }}" class="btn-biografi">
                         Biografi
                     </a>
                 @else

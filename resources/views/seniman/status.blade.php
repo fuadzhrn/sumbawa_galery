@@ -1,6 +1,7 @@
 @extends('layouts.seniman')
 
 @section('title', 'Status Approval - Seniman')
+@section('page_title', 'Status Approval')
 
 @section('extra_css')
     <style>

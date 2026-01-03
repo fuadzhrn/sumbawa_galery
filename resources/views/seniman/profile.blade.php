@@ -1,6 +1,7 @@
 @extends('layouts.seniman')
 
 @section('title', 'Profile Saya - Seniman')
+@section('page_title', 'Profile Saya')
 
 @section('extra_css')
     <style>

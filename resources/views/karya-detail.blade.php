@@ -286,7 +286,7 @@
                     </div>
                     <div class="stat-item">
                         <div class="stat-number">{{ $karyaSeni->likes ?? 0 }}</div>
-                        <div class="stat-label">Suka</div>
+                        <div class="stat-label">Suka </div>
                     </div>
                 </div>
             </div>

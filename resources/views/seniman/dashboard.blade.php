@@ -1,6 +1,7 @@
 @extends('layouts.seniman')
 
 @section('title', 'Dashboard - Seniman')
+@section('page_title', 'Dashboard')
 
 @section('extra-css')
     <style>

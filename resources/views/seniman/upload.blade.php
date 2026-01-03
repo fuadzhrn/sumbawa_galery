@@ -1,8 +1,9 @@
 @extends('layouts.seniman')
 
 @section('title', 'Upload Karya - Seniman')
+@section('page_title', 'Upload Karya')
 
-@section('extra-css')
+@section('extra_css')
     <style>
         .file-input-wrapper {
             position: relative;
@@ -41,12 +42,84 @@
             text-align: center;
         }
 
+        .file-preview-container {
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+            background-color: #f8f9fa !important;
+            border: 1px solid #dee2e6 !important;
+            border-radius: 5px !important;
+            padding: 12px !important;
+            margin-top: 10px !important;
+            min-height: 80px !important;
+            max-height: 350px !important;
+            overflow: auto !important;
+            scrollbar-width: none !important;
+            -ms-overflow-style: none !important;
+        }
+        
+        .file-preview-container::-webkit-scrollbar {
+            display: none !important;
+        }
+
+        .file-preview-container img,
+        .file-preview-container video {
+            max-width: 100% !important;
+            max-height: 320px !important;
+            width: auto !important;
+            height: auto !important;
+            border-radius: 5px !important;
+            object-fit: contain !important;
+            display: block !important;
+        }
+
         .file-preview img,
         .file-preview video {
-            max-width: 100%;
-            max-height: 300px;
-            border-radius: 5px;
+            max-width: 100% !important;
+            max-height: 320px !important;
+            width: auto !important;
+            height: auto !important;
+            border-radius: 5px !important;
+            margin-top: 10px !important;
+            object-fit: contain !important;
+            display: block !important;
+        }
+
+        .file-info {
+            font-size: 13px;
+            color: #666;
             margin-top: 10px;
+            word-break: break-word;
+        }
+
+        .thumbnail-preview-container {
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+            background-color: #f8f9fa !important;
+            border: 1px solid #dee2e6 !important;
+            border-radius: 5px !important;
+            padding: 10px !important;
+            margin-top: 10px !important;
+            min-height: 60px !important;
+            max-height: 200px !important;
+            overflow: auto !important;
+            scrollbar-width: none !important;
+            -ms-overflow-style: none !important;
+        }
+        
+        .thumbnail-preview-container::-webkit-scrollbar {
+            display: none !important;
+        }
+
+        .thumbnail-preview-container img {
+            max-width: 100% !important;
+            max-height: 180px !important;
+            width: auto !important;
+            height: auto !important;
+            border-radius: 5px !important;
+            object-fit: contain !important;
+            display: block !important;
         }
 
         .media-type-info {
@@ -301,9 +374,7 @@
 
             // Show file info
             const fileInfo = document.createElement('div');
-            fileInfo.style.marginTop = '10px';
-            fileInfo.style.fontSize = '13px';
-            fileInfo.style.color = '#666';
+            fileInfo.className = 'file-info';
             fileInfo.innerHTML = `<strong>File:</strong> ${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)`;
             preview.appendChild(fileInfo);
 
@@ -311,11 +382,33 @@
             if (mediaType === 'image') {
                 const reader = new FileReader();
                 reader.onload = function(e) {
+                    const container = document.createElement('div');
+                    container.className = 'file-preview-container';
+                    
                     const img = document.createElement('img');
                     img.src = e.target.result;
-                    preview.appendChild(img);
+                    img.alt = 'Preview';
+                    
+                    container.appendChild(img);
+                    preview.appendChild(container);
                 };
                 reader.readAsDataURL(file);
+            } else if (mediaType === 'video') {
+                const container = document.createElement('div');
+                container.className = 'file-preview-container';
+                
+                const video = document.createElement('video');
+                video.style.width = 'auto';
+                video.style.height = 'auto';
+                video.controls = true;
+                
+                const source = document.createElement('source');
+                source.src = URL.createObjectURL(file);
+                source.type = file.type;
+                
+                video.appendChild(source);
+                container.appendChild(video);
+                preview.appendChild(container);
             }
         }
     }
@@ -328,9 +421,15 @@
             const file = input.files[0];
             const reader = new FileReader();
             reader.onload = function(e) {
+                const container = document.createElement('div');
+                container.className = 'thumbnail-preview-container';
+                
                 const img = document.createElement('img');
                 img.src = e.target.result;
-                preview.appendChild(img);
+                img.alt = 'Thumbnail Preview';
+                
+                container.appendChild(img);
+                preview.appendChild(container);
             };
             reader.readAsDataURL(file);
         }
